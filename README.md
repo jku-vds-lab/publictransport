@@ -1,6 +1,6 @@
 # publictransport
 
-### INteractive webapp that shows you how far public transport can get you in a particular amount of time?
+### Interactive webapp that shows you how far public transport can get you in a particular amount of time?
 
 #### Check out this link to see a video of the functions: https://www.dropbox.com/s/nfrqtfcrvbc6kxw/video.mp4?dl=0
 
