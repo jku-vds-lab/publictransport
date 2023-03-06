@@ -15,4 +15,49 @@
 #### 8.) Insert your starting station, starting time and timelimt and watch how far you can travel
 
 
+# Run Server
+open cmd and navigate to /fastapi 
 
+create a new virtual environment for the dependencies
+
+```bash
+python -m venv .venv
+```
+
+activate it
+
+```bash
+# Ubuntu
+source .venv/bin/activate
+
+# Windows (cmd)
+.\.venv\Scripts\activate
+```
+
+install dependencies (TODO: create requirements file)
+
+```
+pip install uvicorn
+pip install fastapi
+pip install pydantic
+pip install geojson
+pip install shapely
+pip install pandas
+
+```
+
+
+# Run Front End
+open a powershell terminal and navigate to /myapp
+
+install dependencies
+
+```bash
+npm install
+```
+
+run development server
+
+```bash
+npm run dev
+```
