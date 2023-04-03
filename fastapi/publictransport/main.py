@@ -17,8 +17,6 @@ from shapely.ops import cascaded_union
 
 app = FastAPI()
 
-app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
-
 #origins = [
 #    "http://localhost",
 #    "http://localhost:8080",
@@ -50,6 +48,7 @@ timedelta_ = None
 
 #with open('dist_data.pickle', 'rb') as f:
     #dist_data = pickle.load(f)
+
 
 
 # get part of feed you want #feed.routes
@@ -91,12 +90,13 @@ def load_feed(starting_station: str,starting_time: str,timelimit: str): #Steyr K
 #    return parse_csv(df_routes)
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+# @app.get("/")
+# async def root():
+#     return {"message": "Hello World"}
 
 @app.get("/marker")
 async def get_geo(station_name: str):
+    print("test")
     stop_iid = get_id_of_stop(station_name)
     return get_lat_lon_of_stop(stop_iid)
 
@@ -244,3 +244,7 @@ def solution_geojson(solution_array, starting_station):
 
 def get_lat_lon_of_stop(stop_id):
     return stops_data.stop_lat[stops_data.stop_id==stop_id].iloc[0],stops_data.stop_lon[stops_data.stop_id==stop_id].iloc[0]
+
+
+
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")

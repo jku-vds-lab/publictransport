@@ -1,6 +1,8 @@
 data
 publictransport/data
 
+publictransport.egg-info
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
