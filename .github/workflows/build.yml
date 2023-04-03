@@ -27,7 +27,7 @@ jobs:
           git config --global url."https://github.com/".insteadOf ssh://git@github.com/
           git config --add --global url."https://github.com/".insteadOf git@github.com:
       - name: Install dependencies
-        run: cd myapp && npm npm install
+        run: cd myapp && npm install
         shell: bash
       - name: build frontend
         run: cd myapp && npm run build
