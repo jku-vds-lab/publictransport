@@ -30,12 +30,6 @@ jobs:
       - name: build frontend
         run: cd myapp && npm run build
         shell: bash
-
-  build-docker:
-    runs-on: ubuntu-latest
-    needs: [build]
-    steps:
-      - uses: actions/checkout@v3
       - name: Build the Docker image
         run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
       - name: Log in to the Container registry
