@@ -2,6 +2,7 @@
     import App from "../App.svelte";
     import Api from "./Api.svelte";
     import {url_stored, marker, currentMinutes, currentTime, selectedOption} from '../stores.js';
+    import { BASE_URL } from "../main";
     
 
     let selectedOption_l = 'select Station';
@@ -17,8 +18,8 @@
     let url2 = null
 
     //let apicall = "waiting for response..."
-    let request_url_start = "http://127.0.0.1:8000/feed?"
-    let request_url_start2 = "http://127.0.0.1:8000/marker?"
+    let request_url_start = BASE_URL + "feed?"
+    let request_url_start2 = BASE_URL + "marker?"
 
     //const startAction = async () => {
     //    url = request_url_start + "starting_station="+ selectedOption +"&starting_time="+ currentTime.substring(0, 5) + ':00' + "&timelimit=" + //currentMinutes

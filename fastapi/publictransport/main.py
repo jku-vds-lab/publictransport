@@ -1,7 +1,9 @@
 from fastapi import FastAPI, Form
+from fastapi.staticfiles import StaticFiles
 #from python_code import parse_csv
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import RedirectResponse
 
 import numpy as np 
 import pandas as pd
@@ -14,6 +16,8 @@ from shapely.geometry import Polygon, Point
 from shapely.ops import cascaded_union
 
 app = FastAPI()
+
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
 
 #origins = [
 #    "http://localhost",
@@ -46,6 +50,7 @@ timedelta_ = None
 
 #with open('dist_data.pickle', 'rb') as f:
     #dist_data = pickle.load(f)
+
 
 # get part of feed you want #feed.routes
 @app.get("/feed")

@@ -5,11 +5,12 @@
     import Navbar from './Navbar.svelte';
     import {url_stored, marker, currentMinutes, currentTime, selectedOption} from '../stores.js';
     import { object_without_properties } from 'svelte/internal';
+    import { BASE_URL } from '../main';
    
     let spinns;
     let marker_a = new Marker();
-    let request_url_start = "http://127.0.0.1:8000/feed?"
-    let request_url_start2 = "http://127.0.0.1:8000/marker?"
+    let request_url_start = BASE_URL + "feed?"
+    let request_url_start2 = BASE_URL + "marker?"
 
     function showSpinner() {
       spinns.style.display = "block";
