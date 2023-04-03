@@ -16,9 +16,7 @@
 
 
 # Run Server
-open cmd and navigate to /fastapi 
-
-create a new virtual environment for the dependencies
+open cmd and create a new virtual environment for the dependencies
 
 ```bash
 python -m venv .venv
@@ -46,6 +44,11 @@ pip install pandas
 
 ```
 
+
+```
+uvicorn main:app --reload
+
+```
 
 # Run Front End
 open a powershell terminal and navigate to /myapp
