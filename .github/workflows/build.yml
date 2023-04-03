@@ -42,7 +42,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ghcr.io/jku-vds-lab/reaction-cime
+          images: ghcr.io/jku-vds-lab/publictransport
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
