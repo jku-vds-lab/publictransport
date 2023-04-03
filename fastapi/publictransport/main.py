@@ -39,7 +39,8 @@ stops_data = pd.read_csv('data/stops.txt', sep=",")
 stops_data['stop_id'] = stops_data['stop_id'].apply(lambda x: ':'.join(x.split(':')[:-1])) #combines the two stops in both directions to one stop for both directions
 stops_data = stops_data.drop_duplicates(subset=['stop_id'],keep="first")
 
-gtfs_data = pd.read_csv('data/stop_times.txt', sep=",")
+gtfs_data = pd.read_csv('data/stop_times.zip', sep=",")
+#gtfs_data = pd.read_csv('data/stop_times.txt', sep=",")
 gtfs_data = gtfs_data.iloc[:,0:4]
 gtfs_data.columns = ['trip_id', 'arrival_time', 'departure_time', 'stop_id']
 gtfs_data = gtfs_data[gtfs_data.arrival_time<"23:58:00"]
