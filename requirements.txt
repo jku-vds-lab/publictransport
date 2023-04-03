@@ -1,0 +1,7 @@
+uvicorn
+fastapi
+pydantic
+geojson
+shapely
+pandas
+
