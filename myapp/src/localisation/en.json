@@ -1,0 +1,14 @@
+{
+    "navbar_title": "How far can Public transport get you?",
+    "navbar_describtion": "Select a starting station, decide your timelimit in minutes and your start time:",
+    "option_select": "Select an option",
+    "desc_min": "Timelimit(Min as Integer)",
+    "desc_time": "Start Time (hh:mm)",
+    "toggle_navbar": "Toggle input",
+    "select_start_station": "Start Station",
+    "start_search": "Start Search",
+    "start_select": "Select a starting station",
+    "popup_text": "This online tool allows you to quickly and easily select different locations/stops and then see in an intuitive visualization how well the station is connected to the public transport network and how far you can travel in a self-selected period of time. To do this, first select a start station in the input field at the top left, then a time limit and a start time. Now click on Start search and wait a moment.",
+    "popup_head": "Welcome",
+    "popup_button": "I want to try it"
+  }
