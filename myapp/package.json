@@ -16,6 +16,7 @@
   "dependencies": {
     "file-system": "^1.2.2",
     "fs": "^0.0.1-security",
-    "maplibre-gl": "^2.4.0"
+    "maplibre-gl": "^2.4.0",
+    "svelte-i18n": "^3.6.0"
   }
 }
