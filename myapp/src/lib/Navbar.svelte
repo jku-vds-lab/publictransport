@@ -17,6 +17,7 @@
 
     let currentMinutes_l = null
     let currentTime_l = null
+    let sortOpt = options.sort()
     //let start = true
     //let url = null
     //let url2 = null
@@ -52,7 +53,7 @@
           selectedOption.update(so => $selectedOption)
         }}>
           <option selected disabled>{$_("option_select")}</option> 
-          {#each options as option}
+          {#each sortOpt as option}
               <option value={option}>{option}</option>
           {/each}
         </select>
