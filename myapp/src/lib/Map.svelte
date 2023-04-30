@@ -51,8 +51,39 @@
 
       const apiKey = 'QOmo53z4iFjM8sny5h67';
   
-      const initialState = { lng: 14.28611, lat: 48.30639, zoom: 12 };
+      //const initialState = { lng: 14.28611, lat: 48.30639, zoom: 12 };
+      const getUserLocation = () => {
+        return new Promise((resolve, reject) => {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                resolve({
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude,
+                });
+              },
+              (error) => {
+                console.error(error);
+                reject(error);
+              }
+            );
+          } else {
+            reject(new Error("Geolocation is not supported by this browser."));
+          }
+        });
+      };
 
+      // Set the user's coordinates as the initial state or use default coordinates
+      let initialState;
+      try {
+        const userLocation = await getUserLocation();
+        initialState = { ...userLocation, zoom: 12 };
+      } catch (error) {
+        initialState = { lng: 14.28611, lat: 48.30639, zoom: 12 };
+      }
+      
+      // end new 
+      
       map = new Map({
         container: mapContainer,
         style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${apiKey}`,
