@@ -34,6 +34,23 @@
     function closePopup() {
       popupVisible = false;
       selectedOption.set(nearStation);
+      const minutesInput = document.getElementById("minutesInput");
+      const timeInput = document.getElementById("timeInput");
+      
+      // Get the current time
+      const now = new Date();
+      const currentH = now.getHours();
+      const currentM = now.getMinutes();
+      
+      // Format the current time as "HH:mm"
+      const formattedTime = `${String(currentH).padStart(2, '0')}:${String(currentM).padStart(2, '0')}`;
+      
+      // Set the input fields' values
+      minutesInput.value = "60";
+      timeInput.value = formattedTime;
+      
+      currentMinutes.set(minutesInput.value);
+      currentTime.set(timeInput.value);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -210,7 +227,7 @@
           console.log(error);
           return [];
         }) 
-        toggleNavbar()
+        if ($isOpen) (toggleNavbar());
     } 
   </script>
   

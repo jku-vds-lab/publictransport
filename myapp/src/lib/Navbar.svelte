@@ -58,9 +58,9 @@
           {/each}
         </select>
         <br />
-        <input type="text" placeholder="{$_("desc_min")}" value="{currentMinutes_l}" class="headingInput" on:input={funktionbeiInputMinutes}>
+        <input id="minutesInput" type="text" placeholder="{$_("desc_min")}" value="{currentMinutes_l}" class="headingInput" on:input={funktionbeiInputMinutes}>
         <br />
-        <input type="text" placeholder="{$_("desc_time")}" value="{currentTime_l}" class="headingInput" on:input={funktionbeiInputTime}>
+        <input id="timeInput" type="text" placeholder="{$_("desc_time")}" value="{currentTime_l}" class="headingInput" on:input={funktionbeiInputTime}>
         <br />
         <button on:click="{toggleNavbar}" class="toggle-button">{$_("toggle_navbar")}</button>
 
