@@ -16,6 +16,7 @@
     let marker_a = new Marker();
     let request_url_start = BASE_URL + "feed?"
     let request_url_start2 = BASE_URL + "marker?"
+    let request_url_start3 = BASE_URL + "nearest_station?"
 
     function showSpinner() {
       spinns.style.display = "block";
@@ -32,7 +33,7 @@
 
     function closePopup() {
       popupVisible = false;
-      selectedOption.set("Choose");
+      selectedOption.set(nearStation);
     }
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -45,6 +46,8 @@
     let apicall = "waiting for apicall...";
     var marker_array = null
     let popupVisible = false;
+    let initialState = null;
+    let nearStation = null; 
   
     onMount(async() => {
       popupVisible = true; 
@@ -74,16 +77,16 @@
       };
 
       // Set the user's coordinates as the initial state or use default coordinates
-      let initialState;
       try {
         const userLocation = await getUserLocation();
         initialState = { ...userLocation, zoom: 12 };
+        startClosestStation();
       } catch (error) {
         initialState = { lng: 14.28611, lat: 48.30639, zoom: 12 };
+        startClosestStation();
       }
       
-      // end new 
-      
+      //create Map
       map = new Map({
         container: mapContainer,
         style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${apiKey}`,
@@ -147,6 +150,23 @@
         .then(response => response.json())
         .then(data => {
             strii = data.toString()
+            resolve();
+            }).catch(error => {
+                console.log(error);
+                reject(error);
+            });
+      });
+    };
+
+    const startClosestStation = () => {
+      console.log(nearStation)
+      return new Promise((resolve, reject) => {
+        fetch(request_url_start3 + "lat=" + String(initialState.lat) + "&lon=" + String(initialState.lng))
+        .then(response => response.json())
+        .then(data => {
+            nearStation = data.toString()
+            console.log(nearStation); //remove console log later
+
             resolve();
             }).catch(error => {
                 console.log(error);

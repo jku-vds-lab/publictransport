@@ -101,8 +101,20 @@ async def get_geo(station_name: str):
     stop_iid = get_id_of_stop(station_name)
     return get_lat_lon_of_stop(stop_iid)
 
+@app.get("/nearest_station")
+async def find_nearest_station(lat: str, lon: str):
+    return find_closest_station(lat,lon)
+
 
 ###### Python Functions #############################################
+def find_closest_station(lat,lon):
+    lat = float(lat)
+    lon = float(lon)  
+    #euclidian distance
+    stops_data['distance'] = ((stops_data['stop_lat'] - lat) ** 2 + (stops_data['stop_lon'] - lon) ** 2) ** 0.5
+    closest_station = stops_data.loc[stops_data['distance'].idxmin(), 'stop_name']
+    return closest_station
+
 def add_minutes(start_time, timelimit):
     early_timelimit = start_time
     start_time = datetime.strptime(start_time, "%H:%M:%S")
