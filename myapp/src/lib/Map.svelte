@@ -22,13 +22,13 @@
       spinns.style.display = "block";
     }
 
+    function changeLanguage(lang) {
+      locale.set(lang);
+    }
+
     // Hide spinner
     function hideSpinner() {
       spinns.style.display = "none";
-    }
-
-    function changeLanguage(lang) {
-      locale.set(lang);
     }
 
     function closePopup() {
@@ -97,7 +97,7 @@
       try {
         const userLocation = await getUserLocation();
         initialState = { ...userLocation, zoom: 12 };
-        startClosestStation();
+        startClosestStation(); 
       } catch (error) {
         initialState = { lng: 14.28611, lat: 48.30639, zoom: 12 };
         startClosestStation();
@@ -182,8 +182,6 @@
         .then(response => response.json())
         .then(data => {
             nearStation = data.toString()
-            console.log(nearStation); //remove console log later
-
             resolve();
             }).catch(error => {
                 console.log(error);
@@ -203,6 +201,39 @@
         fetch(url)
         .then(response => response.json())
         .then(data => {
+          if (typeof data === "string" && data.startsWith("!!!")) {
+            hideSpinner()
+            const textInsert = data.slice(3);
+            const message = $_("popup2_prefix") + textInsert + $_("popup2_suffix");
+            const confirmed = window.confirm(message);
+            if (confirmed) {
+              const timeInput = document.getElementById("timeInput");
+              timeInput.value = data.slice(3);
+              currentTime.set(timeInput.value);
+              startA();
+              return
+            } else {
+              apicall = (data);
+              const parsedGeoJson = JSON.parse(apicall);
+              map.addSource('map_source', {
+              type: 'geojson',
+              data: new Object(parsedGeoJson)
+              }
+              )
+              map.addLayer({
+                'id': 'polygons',
+                'type': 'fill',
+                'source': 'map_source',
+                'layout': {},
+                'paint': { 
+                    'fill-color': '#d50b55',
+                    'fill-opacity': 0.2
+                }
+              })
+              hideSpinner()
+              map.setCenter([marker_array[1],marker_array[0]]); 
+            }
+          }          
           apicall = (data)
           const parsedGeoJson = JSON.parse(apicall);
           map.addSource('map_source', {
@@ -221,13 +252,14 @@
             }
           })
           hideSpinner()
+          if ($isOpen) (toggleNavbar());
           map.setCenter([marker_array[1],marker_array[0]]); 
           })
         .catch(error => {
           console.log(error);
+          if ($isOpen) (toggleNavbar());
           return [];
         }) 
-        if ($isOpen) (toggleNavbar());
     } 
   </script>
   

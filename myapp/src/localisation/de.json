@@ -1,14 +1,16 @@
 {
-    "navbar_title": "Wie weit kommt man mit den Öffis?",
-    "navbar_describtion": "Wähle deine Start-Haltestelle, dein Zeitlimit in Minuten und deine Startzeit:",
-    "option_select": "Wähle eine Option",
-    "desc_min": "Zeitbegrenzung(Minuten)",
-    "desc_time": "Startzeit (Format hh:mm)",
-    "toggle_navbar": "Eingabe aus/einblenden",
-    "select_start_station": "Starthaltestelle",
-    "start_search": "Suche starten",
-    "start_select": "Wähle eine Start-Haltestelle",
-    "popup_text": "Dieses Onlinetool ermöglicht es dir verschiedene Orte/Haltestellen schnell und einfach auszuwählen und dann in einer intuitiven Visualisierung zu sehen wie gut die Station ans Öffi Netz angeschlossen ist und wie weit man in einer selbst gewählten Zeitspanne reisen könnte. Wähle dazu zuerst links oben im Eingabefeld eine Starthaltestellen aus, dann eine Zeitbgrenzung und noch eine Startzeit. Klicke nun auf Suche starten und warte kurz. ",
-    "popup_head": "Willkommen",
-    "popup_button": "Ich will es ausprobieren."
-  }
+  "navbar_title": "Wie weit kommt man mit den Öffis?",
+  "navbar_describtion": "Wähle deine Start-Haltestelle, dein Zeitlimit in Minuten und deine Startzeit:",
+  "option_select": "Wähle eine Option",
+  "desc_min": "Zeitbegrenzung(Minuten)",
+  "desc_time": "Startzeit (Format hh:mm)",
+  "toggle_navbar": "Eingabe aus/einblenden",
+  "select_start_station": "Starthaltestelle",
+  "start_search": "Suche starten",
+  "start_select": "Wähle eine Start-Haltestelle",
+  "popup_text": "Dieses Onlinetool ermöglicht es dir verschiedene Orte/Haltestellen schnell und einfach auszuwählen und dann in einer intuitiven Visualisierung zu sehen wie gut die Station ans Öffi Netz angeschlossen ist und wie weit man in einer selbst gewählten Zeitspanne reisen könnte. Wähle dazu zuerst links oben im Eingabefeld eine Starthaltestellen aus, dann eine Zeitbgrenzung und noch eine Startzeit. Klicke nun auf Suche starten und warte kurz. ",
+  "popup_head": "Willkommen",
+  "popup_button": "Ich will es ausprobieren.",
+  "popup2_prefix": "Der nächste Bus/Zug an dieser Station kommt erst um: ",
+  "popup2_suffix": "\n Soll die Statrzeit angepasst werden?"
+}

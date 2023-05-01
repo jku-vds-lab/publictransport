@@ -191,6 +191,16 @@ def execute(start_station,start_time,timelimit,result,visited_routes,visited_sto
     starting_points = find_all_routes_that_include_this_station(useful_gtfs_data, visited_stops[0]).drop_duplicates(subset=['trip_id'],keep="first") #just use first occurence if bus visits station more than once
     #print("Starting Points:",starting_points)
 
+    min_departure_time = datetime.strptime(starting_points["departure_time"].min(), "%H:%M:%S")
+    start_time_datetime = datetime.strptime(start_time, "%H:%M:%S")
+
+    time_difference = min_departure_time - start_time_datetime
+    min_time_difference = timedelta(minutes=5)
+
+    if time_difference >= min_time_difference:
+        print("!!!" + str(min_departure_time.time()))
+        return "!!!" + str(min_departure_time.time())
+    
     for index, row in starting_points.iterrows():
         next_stops_on_this_route(useful_gtfs_data,row,start_time,timedelta_,timelimit,visited_routes,visited_stops,result)
         
