@@ -156,7 +156,7 @@
         type: 'geojson',
         data: geojson,
         cluster: true,
-        clusterMaxZoom: 12,
+        clusterMaxZoom: 10,
         clusterRadius: 50
       });
       // Add cluster layer
@@ -190,7 +190,7 @@
         type: 'geojson',
         data: geojson,
         cluster: true,
-        clusterMaxZoom: 12,
+        clusterMaxZoom: 10,
         clusterRadius: 50
       });
       addCluster('kindergarten', '#FFD633');
@@ -223,7 +223,7 @@
         type: 'geojson',
         data: geojson,
         cluster: true,
-        clusterMaxZoom: 12,
+        clusterMaxZoom: 10,
         clusterRadius: 50
       });
 
@@ -245,7 +245,7 @@
         type: 'FeatureCollection',
         features: mus_coords.map(coord => ({
           type: 'Feature',
-          properties: { name: 'Museen' },
+          properties: { name: 'Museum' },
           geometry: {
             type: 'Point',
             coordinates: [coord[1], coord[0]]
@@ -257,7 +257,7 @@
         type: 'geojson',
         data: geojson,
         cluster: true,
-        clusterMaxZoom: 12,
+        clusterMaxZoom: 10,
         clusterRadius: 50
       });
 
@@ -279,7 +279,7 @@
         type: 'FeatureCollection',
         features: bib_coords.map(coord => ({
           type: 'Feature',
-          properties: { name: 'Bibliotheken' },
+          properties: { name: 'Bibliothek' },
           geometry: {
             type: 'Point',
             coordinates: [coord[1], coord[0]]
@@ -291,7 +291,7 @@
         type: 'geojson',
         data: geojson,
         cluster: true,
-        clusterMaxZoom: 12,
+        clusterMaxZoom: 10,
         clusterRadius: 50
       });
 
@@ -340,7 +340,7 @@
         paint: {
           'circle-color': color,
           'circle-radius': 12,
-          'circle-stroke-width': 1,
+          'circle-stroke-width': 0,
           'circle-stroke-color': '#fff',
         }
       });
@@ -556,7 +556,7 @@
         <h2>{$_("popup_head")}</h2>
         <p>{$_("popup_text")}</p>
         <button on:click={closePopup}>{$_("popup_button")}</button>
-        <button on:click={() => window.open('https://forms.office.com/e/Gvf0iveeWc', '_blank')} class="popup-button secondary">{$_("open_survey")}</button>
+        <button on:click={() => window.open('https://forms.office.com/e/Gvf0iveeWc', '_blank')} class="popup-button secondary">{$_("link_quiz")}</button>
       </div>
     </div>
   {/if}

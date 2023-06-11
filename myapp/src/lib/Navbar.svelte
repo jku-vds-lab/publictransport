@@ -20,6 +20,11 @@
     let currentMinutes_l = null
     let currentTime_l = null
     let sortOpt = options.sort()
+
+    let currentLocale;
+    locale.subscribe(value => {
+      currentLocale = value;
+    });
     //let start = true
     //let url = null
     //let url2 = null
@@ -82,7 +87,7 @@
           {$_("enable_second_dropdown")}
         </label>
 
-        <button on:click="{toggleNavbar}" class="toggle-button">{$_("toggle_navbar")}</button>
+        <button on:click="{toggleNavbar}" class="toggle-button {currentLocale === 'en' ? 'en' : ''}">{$_("toggle_navbar")}</button>
 
         <select class="headingInput" bind:value={$selectedOptionB} on:change={() => {
           selectedOptionB.update(so => $selectedOptionB)
@@ -94,12 +99,12 @@
         </select>
         
         <br>
-        <input class="public_check" type="checkbox" bind:checked={$showAltenPflegeHeim}> Alten/Pflegeheime
-        <input class="public_check" type="checkbox" bind:checked={$showKindergarten}> Kindergärten
-        <input class="public_check" type="checkbox" bind:checked={$showUnis}> Hochschulen
+        <input class="public_check" type="checkbox" bind:checked={$showAltenPflegeHeim}> {$_("alt_plu")}
+        <input class="public_check" type="checkbox" bind:checked={$showKindergarten}> {$_("kin_plu")}
+        <input class="public_check" type="checkbox" bind:checked={$showUnis}> {$_("uni_plu")}
         <br>
-        <input class="public_check" type="checkbox" bind:checked={$showMus}> Museen 
-        <input class="public_check" type="checkbox" bind:checked={$showBib}> Bibliotheken 
+        <input class="public_check" type="checkbox" bind:checked={$showMus}> {$_("mus_plu")}
+        <input class="public_check" type="checkbox" bind:checked={$showBib}> {$_("bib_plu")}
       
     </div>
   </nav>
@@ -158,8 +163,12 @@
       border: none;
       outline: none;
       color: rgb(47, 45, 45);
-      top: 110px !important;
+      top: 115px !important;
       left: 460px !important;
+    }
+
+    .toggle-button.en {
+    left: 485px !important;
     }
   
     .heading > h2 {
