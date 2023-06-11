@@ -1,16 +1,12 @@
 from fastapi import FastAPI, Form
 from fastapi.staticfiles import StaticFiles
-#from python_code import parse_csv
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 
 import numpy as np 
 import pandas as pd
-#import pickle
-#import gtfs_kit as gk
 from datetime import datetime, timedelta
-#import time
 from geojson import Polygon, Point, Feature, FeatureCollection
 from shapely.geometry import Polygon, Point
 from shapely.ops import cascaded_union
@@ -37,8 +33,7 @@ stops_data = pd.read_csv('data/stops.txt', sep=",")
 stops_data['stop_id'] = stops_data['stop_id'].apply(lambda x: ':'.join(x.split(':')[:-1])) #combines the two stops in both directions to one stop for both directions
 stops_data = stops_data.drop_duplicates(subset=['stop_id'],keep="first")
 
-gtfs_data = pd.read_csv('data/stop_times.zip', sep=",")
-#gtfs_data = pd.read_csv('data/stop_times.txt', sep=",")
+gtfs_data = pd.read_csv('data/stop_times.txt', sep=",")
 gtfs_data = gtfs_data.iloc[:,0:4]
 gtfs_data.columns = ['trip_id', 'arrival_time', 'departure_time', 'stop_id']
 gtfs_data = gtfs_data[gtfs_data.arrival_time<"23:58:00"]
@@ -50,11 +45,9 @@ timedelta_ = None
 #with open('dist_data.pickle', 'rb') as f:
     #dist_data = pickle.load(f)
 
-
-
 # get part of feed you want #feed.routes
 @app.get("/feed")
-def load_feed(starting_station: str,starting_time: str,timelimit: str): #Steyr Kellaugasse
+def load_feed(starting_station: str,starting_time: str,timelimit: str,forced: str): #Steyr Kellaugasse
     
     #timelimit = "00:30:00" #max 3h -> I would recommend this because of Performance reasons and times >=3h are less interesting in my Opinion
     #starting_time = "21:10:00"
@@ -62,7 +55,7 @@ def load_feed(starting_station: str,starting_time: str,timelimit: str): #Steyr K
     result = []
     visited_routes = []
     visited_stops = []
-    testrun=execute(starting_station,starting_time,timelimit,result,visited_routes,visited_stops) #starting_station_stop_id, starting_time, timelimit
+    testrun=execute(starting_station,starting_time,timelimit,result,visited_routes,visited_stops,forced) #starting_station_stop_id, starting_time, timelimit
     return str(testrun) 
 
 
@@ -91,20 +84,18 @@ def load_feed(starting_station: str,starting_time: str,timelimit: str): #Steyr K
 #    return parse_csv(df_routes)
 
 
-# @app.get("/")
-# async def root():
-#     return {"message": "Hello World"}
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
 
 @app.get("/marker")
 async def get_geo(station_name: str):
-    print("test")
     stop_iid = get_id_of_stop(station_name)
     return get_lat_lon_of_stop(stop_iid)
 
 @app.get("/nearest_station")
 async def find_nearest_station(lat: str, lon: str):
     return find_closest_station(lat,lon)
-
 
 ###### Python Functions #############################################
 def find_closest_station(lat,lon):
@@ -117,6 +108,7 @@ def find_closest_station(lat,lon):
 
 def add_minutes(start_time, timelimit):
     early_timelimit = start_time
+    print("Start_time_variable",start_time)
     start_time = datetime.strptime(start_time, "%H:%M:%S")
     new_time = start_time + timedelta(minutes=timelimit)
     late_timelimit = new_time.strftime("%H:%M:%S")
@@ -176,7 +168,7 @@ def next_stops_on_this_route(useful_gtfs_data,pandas_row,start_time,timedelta_,t
         #print(pandas_row["trip_id"],"route not appended")
         pass
     
-def execute(start_station,start_time,timelimit,result,visited_routes,visited_stops):
+def execute(start_station,start_time,timelimit,result,visited_routes,visited_stops,forced):
     timelimit = int(timelimit)
 
     useful_gtfs_data = get_useful_data(gtfs_data,start_time,timelimit)
@@ -190,17 +182,19 @@ def execute(start_station,start_time,timelimit,result,visited_routes,visited_sto
 
     starting_points = find_all_routes_that_include_this_station(useful_gtfs_data, visited_stops[0]).drop_duplicates(subset=['trip_id'],keep="first") #just use first occurence if bus visits station more than once
     #print("Starting Points:",starting_points)
-
-    min_departure_time = datetime.strptime(starting_points["departure_time"].min(), "%H:%M:%S")
-    start_time_datetime = datetime.strptime(start_time, "%H:%M:%S")
-
-    time_difference = min_departure_time - start_time_datetime
-    min_time_difference = timedelta(minutes=5)
-
-    if time_difference >= min_time_difference:
-        print("!!!" + str(min_departure_time.time()))
-        return "!!!" + str(min_departure_time.time())
     
+    if len(starting_points) != 0:
+        min_departure_time = datetime.strptime(starting_points["departure_time"].min(), "%H:%M:%S")
+        start_time_datetime = datetime.strptime(start_time, "%H:%M:%S")
+
+        time_difference = min_departure_time - start_time_datetime
+        min_time_difference = timedelta(minutes=5) # Minutes
+
+        if forced == "not_forced":
+            if time_difference >= min_time_difference:
+                #print("!!!" + str(min_departure_time.time()))
+                return "!!!" + str(min_departure_time.time())
+
     for index, row in starting_points.iterrows():
         next_stops_on_this_route(useful_gtfs_data,row,start_time,timedelta_,timelimit,visited_routes,visited_stops,result)
         

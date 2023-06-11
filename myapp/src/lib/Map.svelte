@@ -3,7 +3,12 @@
     import { Map, NavigationControl, Marker, LngLat, Popup  } from 'maplibre-gl'
     import 'maplibre-gl/dist/maplibre-gl.css'
     import Navbar from './Navbar.svelte';
-    import {isOpen, url_stored, marker, currentMinutes, currentTime, selectedOption} from '../stores.js';
+    import {isOpen, url_stored, marker, currentMinutes, currentTime, selectedOption, selectedOptionB, secondDropdownEnabled, showAltenPflegeHeim, showKindergarten, showBib, showMus, showUnis} from '../stores.js';
+    import { alten_pflege_coords } from "./alten_pflege_heim.js";
+    import { kinder_coords } from "./kindergarten.js";
+    import { unis_coords } from './unis';
+    import { mus_coords } from './mus';
+    import { bib_coords } from './bib';    
     import { object_without_properties } from 'svelte/internal';
     import { _ } from 'svelte-i18n'
     import { locale } from '../i18n';
@@ -13,22 +18,31 @@
     let mapContainer;
     let stops_list = [];
     let spinns;
+    let spinnsB;
     let marker_a = new Marker();
+    let marker_b = new Marker();
     let request_url_start = BASE_URL + "feed?"
     let request_url_start2 = BASE_URL + "marker?"
     let request_url_start3 = BASE_URL + "nearest_station?"
-
-    function showSpinner() {
-      spinns.style.display = "block";
-    }
 
     function changeLanguage(lang) {
       locale.set(lang);
     }
 
-    // Hide spinner
+    function showSpinner() {
+      spinns.style.display = "block";
+    }
+
     function hideSpinner() {
       spinns.style.display = "none";
+    }
+
+    function showSpinnerB() {
+      spinnsB.style.display = "block";
+    }
+    
+    function hideSpinnerB() {
+      spinnsB.style.display = "none";
     }
 
     function closePopup() {
@@ -55,6 +69,7 @@
 
     document.addEventListener("DOMContentLoaded", () => {
     spinns = document.querySelector("#spin");
+    spinnsB = document.querySelector("#spinB");
     }); 
 
     let url = null;
@@ -64,14 +79,19 @@
     var marker_array = null
     let popupVisible = false;
     let initialState = null;
-    let nearStation = null; 
+    let nearStation = null;
+    let markers_pflege = [];
+    let markers_kinder = [];
+    let markers_uni = [];
+    let markers_mus = [];
+    let markers_bib = [];
   
     onMount(async() => {
       popupVisible = true; 
 
       const apiKey = 'QOmo53z4iFjM8sny5h67';
-  
-      //const initialState = { lng: 14.28611, lat: 48.30639, zoom: 12 };
+      
+      // Get the user's current coordinates
       const getUserLocation = () => {
         return new Promise((resolve, reject) => {
           if (navigator.geolocation) {
@@ -102,7 +122,7 @@
         initialState = { lng: 14.28611, lat: 48.30639, zoom: 12 };
         startClosestStation();
       }
-      
+
       //create Map
       map = new Map({
         container: mapContainer,
@@ -110,50 +130,240 @@
         center: [initialState.lng, initialState.lat],
         zoom: initialState.zoom
       });
-  
       map.addControl(new NavigationControl(null),'top-right');
-      
-          // load stops from file
-      const response = await fetch('stops.txt');
-      const text = await response.text();
-      stops_list = text.split('\n').slice(1).map((line) => {
-        const [stop_id, stop_name, stop_lat, stop_lon, zone_id] = line.split(',');
-        return { stop_id, stop_name: (String(stop_name).replace(/"/g, '')), stop_lat: Number(String(stop_lat).replace(/"/g, '')), stop_lon: Number(String(stop_lon).replace(/"/g, '')), zone_id };
-      });
-      console.log(stops_list[0].stop_lat)
-      console.log(stops_list[0].stop_name)
-      console.log(stops_list)
-      //add markers for each stop
-      stops_list.forEach((stopi) => {
-        const markerx = new Marker({color: "#00bfff"})
-          .setLngLat(new LngLat(stopi.stop_lon, stopi.stop_lat))
-          .addTo(map);
-        
-        // create popup
-        const popup = new Popup({ closeButton: false })
-          .setHTML(stopi.stop_name)
-          .setLngLat(new LngLat(stopi.stop_lon, stopi.stop_lat));
-
-        // bind popup to marker
-        markerx.setPopup(popup);
-        // make marker clickable and update selectedOption
-
-        markerx.getElement().addEventListener('click', () => {
-          // update the selected stop name store
-          //console.log("ckick")
-          selectedOption.set(stopi.stop_name);
-        });
-        markerx.getElement().style.cursor = 'pointer';
-      });
     })
-
-      //new Marker({color: "#FF0000"})
-       // .setLngLat([14.28611,48.30639])
-        //.addTo(map);
   
     onDestroy(() => {
       map.remove();
     });
+
+    //Altenheim
+    $: if ($showAltenPflegeHeim) {
+      // Convert coordinates to geojson
+      const geojson = {
+        type: 'FeatureCollection',
+        features: alten_pflege_coords.map(coord => ({
+          type: 'Feature',
+          properties: { name: 'Alten/Pflegeheim' },
+          geometry: {
+            type: 'Point',
+            coordinates: [coord[1], coord[0]]
+          }
+        }))
+      };
+      // Add data source
+      map.addSource('pflege', {
+        type: 'geojson',
+        data: geojson,
+        cluster: true,
+        clusterMaxZoom: 12,
+        clusterRadius: 50
+      });
+      // Add cluster layer
+      addCluster('pflege', '#00b3b3');
+    } else {
+      // Remove source and layers
+      try {
+        map.removeLayer('pflege-cluster');
+        map.removeLayer('pflege-cluster-count');
+        map.removeLayer('pflege-point');
+        map.removeSource('pflege');
+      } catch (error) {
+        //do nothing
+      }
+    }
+
+    // Kindergarten
+    $: if ($showKindergarten) {
+      const geojson = {
+        type: 'FeatureCollection',
+        features: kinder_coords.map(coord => ({
+          type: 'Feature',
+          properties: { name: 'Hort/Kindergarten' },
+          geometry: {
+            type: 'Point',
+            coordinates: [coord[1], coord[0]]
+          }
+        }))
+      };
+      map.addSource('kindergarten', {
+        type: 'geojson',
+        data: geojson,
+        cluster: true,
+        clusterMaxZoom: 12,
+        clusterRadius: 50
+      });
+      addCluster('kindergarten', '#FFD633');
+    } else {
+      try {
+        map.removeLayer('kindergarten-cluster');
+        map.removeLayer('kindergarten-cluster-count');
+        map.removeLayer('kindergarten-point');
+        map.removeSource('kindergarten');
+      } catch (error) {
+        // Do nothing
+      }
+    }
+
+    // Unis
+    $: if ($showUnis) {
+      const geojson = {
+        type: 'FeatureCollection',
+        features: unis_coords.map(coord => ({
+          type: 'Feature',
+          properties: { name: 'Hochschule/Universität' },
+          geometry: {
+            type: 'Point',
+            coordinates: [coord[1], coord[0]]
+          }
+        }))
+      };
+
+      map.addSource('unis', {
+        type: 'geojson',
+        data: geojson,
+        cluster: true,
+        clusterMaxZoom: 12,
+        clusterRadius: 50
+      });
+
+      addCluster('unis', '#ED6BC7');
+    } else {
+      try {
+        map.removeLayer('unis-cluster');
+        map.removeLayer('unis-cluster-count');
+        map.removeLayer('unis-point');
+        map.removeSource('unis');
+      } catch (error) {
+        // Do nothing
+      }
+    }
+
+    // Museen
+    $: if ($showMus) {
+      const geojson = {
+        type: 'FeatureCollection',
+        features: mus_coords.map(coord => ({
+          type: 'Feature',
+          properties: { name: 'Museen' },
+          geometry: {
+            type: 'Point',
+            coordinates: [coord[1], coord[0]]
+          }
+        }))
+      };
+
+      map.addSource('mus', {
+        type: 'geojson',
+        data: geojson,
+        cluster: true,
+        clusterMaxZoom: 12,
+        clusterRadius: 50
+      });
+
+      addCluster('mus', '#FF3B33');
+    } else {
+      try {
+        map.removeLayer('mus-cluster');
+        map.removeLayer('mus-cluster-count');
+        map.removeLayer('mus-point');
+        map.removeSource('mus');
+      } catch (error) {
+        // Do nothing
+      }
+    }
+
+    // Bibliotheken
+    $: if ($showBib) {
+      const geojson = {
+        type: 'FeatureCollection',
+        features: bib_coords.map(coord => ({
+          type: 'Feature',
+          properties: { name: 'Bibliotheken' },
+          geometry: {
+            type: 'Point',
+            coordinates: [coord[1], coord[0]]
+          }
+        }))
+      };
+
+      map.addSource('bib', {
+        type: 'geojson',
+        data: geojson,
+        cluster: true,
+        clusterMaxZoom: 12,
+        clusterRadius: 50
+      });
+
+      addCluster('bib', '#4FDF66');
+    } else {
+      try {
+        map.removeLayer('bib-cluster');
+        map.removeLayer('bib-cluster-count');
+        map.removeLayer('bib-point');
+        map.removeSource('bib');
+      } catch (error) {
+        // Do nothing
+      }
+    }
+
+    // Function to add a clustered layer for a group of markers
+    function addCluster(id, color) {
+      map.addLayer({
+        id: id + '-cluster',
+        type: 'circle',
+        source: id,
+        filter: ['has', 'point_count'],
+        paint: {
+          'circle-color': color,
+          'circle-radius': ['step',['get', 'point_count'], 20, 10, 30, 50, 40]
+        }
+      });
+
+      map.addLayer({
+        id: id + '-cluster-count',
+        type: 'symbol',
+        source: id,
+        filter: ['has', 'point_count'],
+        layout: {
+          'text-field': '{point_count_abbreviated}',
+          'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+          'text-size': 12
+        }
+      });
+
+      map.addLayer({
+        id: id + '-point',
+        type: 'circle',
+        source: id,
+        filter: ['!', ['has', 'point_count']],
+        paint: {
+          'circle-color': color,
+          'circle-radius': 12,
+          'circle-stroke-width': 1,
+          'circle-stroke-color': '#fff',
+        }
+      });
+
+      // Add popup
+      map.on('click', id + '-point', function (e) {
+        var coordinates = e.features[0].geometry.coordinates.slice();
+        var name = e.features[0].properties.name;
+
+        new Popup()
+            .setLngLat(coordinates)
+            .setHTML(name)
+            .addTo(map);
+      });
+      // Add popup on mouseenter
+      map.on('mouseenter', id + '-point', function (e) {
+        map.getCanvas().style.cursor = 'pointer';
+      });
+      // Remove popup on mouseleave
+      map.on('mouseleave', id + '-point', function () {
+        map.getCanvas().style.cursor = '';
+      });
+    }
 
     function toggleNavbar() {
       isOpen.update(value => !value);
@@ -161,22 +371,42 @@
 
     const startAction = () => {
       return new Promise((resolve, reject) => {
-        url = request_url_start + "starting_station=" + String($selectedOption) + "&starting_time=" + String($currentTime).substring(0, 5) + ':00' + "&timelimit=" + String($currentMinutes);
+        let force_setting = "&forced=forced" //secondDropdownEnabled
+        if (!$secondDropdownEnabled) {
+          force_setting = "&forced=not_forced"
+        }
+        url = request_url_start + "starting_station=" + String($selectedOption) + "&starting_time=" + String($currentTime).substring(0, 5) + ':00' + "&timelimit=" + String($currentMinutes) + force_setting;
         url2 = request_url_start2 + "station_name=" + String($selectedOption);
         fetch(url2)
         .then(response => response.json())
         .then(data => {
             strii = data.toString()
             resolve();
-            }).catch(error => {
-                console.log(error);
-                reject(error);
-            });
+        }).catch(error => {
+            console.log(error);
+            reject(error);
+        });
+      });
+    };
+
+    const startActionB = () => {
+      return new Promise((resolve, reject) => {
+        url = request_url_start + "starting_station=" + String($selectedOptionB) + "&starting_time=" + String($currentTime).substring(0, 5) + ':00' + "&timelimit=" + String($currentMinutes)+ "&forced=forced";
+        url2 = request_url_start2 + "station_name=" + String($selectedOptionB);
+        fetch(url2)
+        .then(response => response.json())
+        .then(data => {
+            strii = data.toString()
+            resolve();
+        }).catch(error => {
+            console.log(error);
+            hideSpinnerB()
+            reject(error);
+        });
       });
     };
 
     const startClosestStation = () => {
-      console.log(nearStation)
       return new Promise((resolve, reject) => {
         fetch(request_url_start3 + "lat=" + String(initialState.lat) + "&lon=" + String(initialState.lng))
         .then(response => response.json())
@@ -192,12 +422,17 @@
 
     const startA = async () => {
         showSpinner()
+        showSpinnerB()
         await startAction()
         marker_a.remove();
         if (map.getLayer('polygons')) map.removeLayer('polygons');
         if (map.getSource('map_source')) map.removeSource('map_source');
         marker_array = JSON.parse("[" + String(strii) + "]");
-        marker_a = new Marker({color: "#FF0000"}).setLngLat([marker_array[1],marker_array[0]]).addTo(map); 
+        marker_a = new Marker({color: "#ff8200"}).setLngLat([marker_array[1],marker_array[0]]).addTo(map); 
+        let popup = new Popup({ offset: 25 }).setText($selectedOption);
+        marker_a.setPopup(popup);
+
+        console.log(url)
         fetch(url)
         .then(response => response.json())
         .then(data => {
@@ -214,6 +449,8 @@
               return
             } else {
               apicall = (data);
+              if (map.getLayer('polygons')) map.removeLayer('polygons');
+              if (map.getSource('map_source')) map.removeSource('map_source');
               const parsedGeoJson = JSON.parse(apicall);
               map.addSource('map_source', {
               type: 'geojson',
@@ -226,15 +463,17 @@
                 'source': 'map_source',
                 'layout': {},
                 'paint': { 
-                    'fill-color': '#d50b55',
-                    'fill-opacity': 0.2
+                    'fill-color': '#ff8200',
+                    'fill-opacity': 0.4
                 }
               })
               hideSpinner()
               map.setCenter([marker_array[1],marker_array[0]]); 
             }
-          }          
+          }
           apicall = (data)
+          if (map.getLayer('polygons')) map.removeLayer('polygons');
+          if (map.getSource('map_source')) map.removeSource('map_source');
           const parsedGeoJson = JSON.parse(apicall);
           map.addSource('map_source', {
           type: 'geojson',
@@ -247,19 +486,67 @@
             'source': 'map_source',
             'layout': {},
             'paint': { 
-                'fill-color': '#d50b55',
-                'fill-opacity': 0.2
+                'fill-color': '#ff8200',
+                'fill-opacity': 0.4
             }
           })
           hideSpinner()
           if ($isOpen) (toggleNavbar());
           map.setCenter([marker_array[1],marker_array[0]]); 
           })
-        .catch(error => {
+          .catch(error => {
           console.log(error);
           if ($isOpen) (toggleNavbar());
           return [];
-        }) 
+        })
+        //###### B
+        if ($secondDropdownEnabled) {
+          await startActionB() 
+          marker_b.remove();
+          if (map.getLayer('polygonsB')) map.removeLayer('polygonsB');
+          if (map.getSource('map_sourceB')) map.removeSource('map_sourceB');
+          marker_array = JSON.parse("[" + String(strii) + "]");
+          marker_b = new Marker({color: "#703eb0"}).setLngLat([marker_array[1],marker_array[0]]).addTo(map); 
+          let popupB = new Popup({ offset: 25 }).setText($selectedOptionB);
+          marker_b.setPopup(popupB);
+          fetch(url)
+          .then(response => response.json())
+          .then(data => {
+            apicall = (data)
+            if (map.getLayer('polygonsB')) map.removeLayer('polygonsB');
+            if (map.getSource('map_sourceB')) map.removeSource('map_sourceB');
+            const parsedGeoJson = JSON.parse(apicall);
+            map.addSource('map_sourceB', {
+            type: 'geojson',
+            data: new Object(parsedGeoJson)
+            }
+            )
+            map.addLayer({
+              'id': 'polygonsB',
+              'type': 'fill',
+              'source': 'map_sourceB',
+              'layout': {},
+              'paint': { 
+                  'fill-color': '#703eb0',
+                  'fill-opacity': 0.4
+              }
+            })
+            hideSpinnerB()
+            if ($isOpen) (toggleNavbar());
+            map.setCenter([marker_array[1],marker_array[0]]); 
+            })
+            .catch(error => {
+            console.log(error);
+            hideSpinnerB()
+            if ($isOpen) (toggleNavbar());
+            return [];}
+            )
+        } else {
+          hideSpinnerB()
+          marker_b.remove();
+          if (map.getLayer('polygonsB')) map.removeLayer('polygonsB');
+          if (map.getSource('map_sourceB')) map.removeSource('map_sourceB');
+        }
     } 
   </script>
   
@@ -269,6 +556,7 @@
         <h2>{$_("popup_head")}</h2>
         <p>{$_("popup_text")}</p>
         <button on:click={closePopup}>{$_("popup_button")}</button>
+        <button on:click={() => window.open('https://forms.office.com/e/Gvf0iveeWc', '_blank')} class="popup-button secondary">{$_("open_survey")}</button>
       </div>
     </div>
   {/if}
@@ -278,6 +566,12 @@
       <button class= "startsearchb" on:click={startA}><h4>{$_("start_search")}</h4></button>
     </div>
     <div class="spinner" id="spin" style="display: none;">
+      <h4>Loading ...</h4>
+      <div class="bounce1"></div>
+      <div class="bounce2"></div>
+      <div class="bounce3"></div>
+    </div>
+    <div class="spinnerB" id="spinB" style="display: none;">
       <h4>Loading ...</h4>
       <div class="bounce1"></div>
       <div class="bounce2"></div>
@@ -294,7 +588,7 @@
   </div>
   
   <style>
-    
+
     .language-switcher {
       position: fixed;
       bottom: 25px;
@@ -337,11 +631,11 @@
     .language-button-de:hover {
       color: #545050;
     }
-    
+
     .map-wrap {
       position: relative;
       width: calc(100vw);
-      height: calc(100vh); /* calculate height of the screen minus the heading */
+      height: calc(100vh);
       z-index: 100;
     }
   
@@ -414,6 +708,37 @@
       animation-delay: -0.16s;
     }
 
+    .spinnerB {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 200;
+      margin: 10px auto;
+      text-align: center;
+      font-size: 15px;
+    }
+
+    .spinnerB > div {
+      width: 25px;
+      height: 25px;
+      background-color: #333;
+
+      border-radius: 100%;
+      display: inline-block;
+      -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+      animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+    }
+
+    .spinnerB .bounce1 {
+      -webkit-animation-delay: -0.32s;
+      animation-delay: -0.32s;
+    }
+
+    .spinnerB .bounce2 {
+      -webkit-animation-delay: -0.16s;
+      animation-delay: -0.16s;
+    }
+
     .popup-overlay {
     position: fixed;
     top: 0;
@@ -447,10 +772,42 @@
       border-radius: 5px;
       font-size: 16px;
       cursor: pointer;
+      display: block;
+      margin-top: 5px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .popup button:hover {
       background-color: #3e8e41;
+      color: white;
+    }
+
+    .popup-button.secondary {
+      background-color: rgb(225, 236, 225);
+      color: #4CAF50;
+      opacity: 1;
+    }
+
+    :global(.maplibregl-popup-close-button),
+    :global(.mapboxgl-popup-close-button) {
+    font-size: 7px;
+    background-color: red;
+    border-color: red;
+    outline: none !important;
+    }
+
+    :global(.maplibregl-popup-close-button:hover),
+    :global(.mapboxgl-popup-close-button:hover) {
+    font-size: 7px;
+    background-color: rgb(198, 16, 16);
+    border-color: red;
+    outline: none !important;
+    }
+
+    :global(.maplibregl-marker),
+    :global(.mapboxgl-marker) {
+    cursor: pointer;
     }
 
     @-webkit-keyframes sk-bouncedelay {
