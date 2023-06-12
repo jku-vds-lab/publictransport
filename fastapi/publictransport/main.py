@@ -84,9 +84,9 @@ def load_feed(starting_station: str,starting_time: str,timelimit: str,forced: st
 #    return parse_csv(df_routes)
 
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+#@app.get("/")
+#async def root():
+#    return {"message": "Hello World"}
 
 @app.get("/marker")
 async def get_geo(station_name: str):
