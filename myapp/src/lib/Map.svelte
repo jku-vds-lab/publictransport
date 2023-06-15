@@ -184,14 +184,15 @@
         clusterRadius: 50
       });
       // Add cluster layer
-      addCluster('pflege', '#00b3b3');
+      addCluster('pflege', '#8ABF98', '/alt.png');
     } else {
       // Remove source and layers
       try {
         map.removeLayer('pflege-cluster');
         map.removeLayer('pflege-cluster-count');
         map.removeLayer('pflege-point');
-        map.removeSource('pflege');
+        map.removeLayer('pflege-point_background');
+        map.removeSource('pflege');      
       } catch (error) {
         //do nothing
       }
@@ -214,17 +215,18 @@
         type: 'geojson',
         data: geojson,
         cluster: true,
-        clusterMaxZoom: 10,
+        clusterMaxZoom: 12,
         clusterRadius: 50
       });
-      addCluster('kindergarten', '#FFD633');
+      addCluster('kindergarten', '#FFC107', '/kin.png');
     } else {
       try {
         map.removeLayer('kindergarten-cluster');
         map.removeLayer('kindergarten-cluster-count');
         map.removeLayer('kindergarten-point');
-        map.removeSource('kindergarten');
-      } catch (error) {
+        map.removeLayer('kindergarten-point_background');
+        map.removeSource('kindergarten');  
+        } catch (error) {
         // Do nothing
       }
     }
@@ -251,14 +253,15 @@
         clusterRadius: 50
       });
 
-      addCluster('unis', '#ED6BC7');
+      addCluster('unis', '#B84ED3', '/uni.png');
     } else {
       try {
         map.removeLayer('unis-cluster');
         map.removeLayer('unis-cluster-count');
         map.removeLayer('unis-point');
+        map.removeLayer('unis-point_background');
         map.removeSource('unis');
-      } catch (error) {
+        } catch (error) {
         // Do nothing
       }
     }
@@ -285,13 +288,14 @@
         clusterRadius: 50
       });
 
-      addCluster('mus', '#FF3B33');
+      addCluster('mus', '#1E88E5', '/mus.png');
     } else {
       try {
         map.removeLayer('mus-cluster');
         map.removeLayer('mus-cluster-count');
         map.removeLayer('mus-point');
-        map.removeSource('mus');
+        map.removeLayer('mus-point_background');
+        map.removeSource('mus');      
       } catch (error) {
         // Do nothing
       }
@@ -319,20 +323,21 @@
         clusterRadius: 50
       });
 
-      addCluster('bib', '#4FDF66');
+      addCluster('bib', '#D81B60', '/bib.png');
     } else {
       try {
         map.removeLayer('bib-cluster');
         map.removeLayer('bib-cluster-count');
         map.removeLayer('bib-point');
+        map.removeLayer('bib-point_background');
         map.removeSource('bib');
       } catch (error) {
-        // Do nothing
+        console.log(error)
       }
     }
 
     // Function to add a clustered layer for a group of markers
-    function addCluster(id, color) {
+    function addCluster(id, color, pathPic) {
       map.addLayer({
         id: id + '-cluster',
         type: 'circle',
@@ -356,14 +361,100 @@
         }
       });
 
+      map.loadImage(pathPic, function(error, image) {
+        if (error) throw error;
+        if (pathPic == '/uni.png') {
+        map.addImage('uniIcon', image);
+        map.addLayer({
+          id: id + '-point',
+          type: 'symbol',
+          source: id,
+          filter: ['!', ['has', 'point_count']],
+          layout: {
+            'icon-size': 0.055,
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
+            'icon-anchor': 'center',
+            'icon-optional': true,
+            'icon-image': 'uniIcon',
+            }
+          })
+        } else if (pathPic == '/mus.png') {
+        map.addImage('musIcon', image);
+        map.addLayer({
+          id: id + '-point',
+          type: 'symbol',
+          source: id,
+          filter: ['!', ['has', 'point_count']],
+          layout: {
+            'icon-size': 0.025,
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
+            'icon-anchor': 'center',
+            'icon-optional': true,
+            'icon-image': 'musIcon',
+            'icon-rotate': 0,
+            } 
+          })
+        } else if (pathPic == '/alt.png') {
+        map.addImage('altIcon', image);
+        map.addLayer({
+          id: id + '-point',
+          type: 'symbol',
+          source: id,
+          filter: ['!', ['has', 'point_count']],
+          layout: {
+            'icon-size': 0.045,
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
+            'icon-anchor': 'center',
+            'icon-optional': true,
+            'icon-image': 'altIcon',
+            }
+          })
+        } else if (pathPic == '/bib.png') {
+        map.addImage('bibIcon', image);
+        map.addLayer({
+          id: id + '-point',
+          type: 'symbol',
+          source: id,
+          filter: ['!', ['has', 'point_count']],
+          layout: {
+            'icon-size': 0.07,
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
+            'icon-anchor': 'center',
+            'icon-optional': true,
+            'icon-image': 'bibIcon',
+            }
+          })
+        } else if (pathPic == '/kin.png') {
+        map.addImage('kinIcon', image);
+        map.addLayer({
+          id: id + '-point',
+          type: 'symbol',
+          source: id,
+          filter: ['!', ['has', 'point_count']],
+          layout: {
+            'icon-size': 0.06,
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
+            'icon-anchor': 'center',
+            'icon-optional': true,
+            'icon-image': 'kinIcon',
+            }
+          })
+        } 
+      });
+
       map.addLayer({
-        id: id + '-point',
+        id: id + '-point_background',
         type: 'circle',
         source: id,
         filter: ['!', ['has', 'point_count']],
         paint: {
           'circle-color': color,
-          'circle-radius': 12,
+          'circle-radius': 18,
           'circle-stroke-width': 0,
           'circle-stroke-color': '#fff',
         }
@@ -374,7 +465,7 @@
         var coordinates = e.features[0].geometry.coordinates.slice();
         var name = e.features[0].properties.name;
 
-        new Popup()
+        new Popup({ offset: [0, -10] })
             .setLngLat(coordinates)
             .setHTML(name)
             .addTo(map);
