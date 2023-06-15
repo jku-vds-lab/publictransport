@@ -739,14 +739,15 @@
     .GetCoordsButtonDiv {
       position: fixed;
       z-index: 120;
-      top: 85px;
-      left: 410px;
+      top: 90px;
+      left: 415px;
       transition: left 0.35s ease-in-out;
     }
 
     .GetCoordsButtonDiv.open {
-      left: -70px;
+      left: -65px;
     }
+
     .language-switcher {
       position: fixed;
       bottom: 25px;
@@ -898,16 +899,16 @@
     }
 
     .popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 999;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 999;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .popup {

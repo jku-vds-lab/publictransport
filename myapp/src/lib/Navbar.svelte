@@ -8,7 +8,10 @@
     import { onMount } from 'svelte';
     import { BASE_URL } from "../main";
     import { get } from "svelte/store";
+    import Svelecte from 'svelecte';
     
+    let items = options.map(option => ({value: option, label: option}));
+
     onMount((async) => {
         // Set the initial value for the select element
         selectedOption.set($_("start_select"))
@@ -69,14 +72,7 @@
         <h2>{$_("navbar_title")}</h2>
         <h4>{$_("navbar_describtion")}</h4>
 
-        <select class="headingInput" bind:value={$selectedOption} on:change={() => {
-          selectedOption.update(so => $selectedOption)
-        }}>
-          <option selected disabled>{$_("option_select")}</option> 
-          {#each sortOpt as option} 
-              <option value={option}>{option}</option>
-          {/each}
-        </select>
+        <Svelecte bind:value={$selectedOption} options={items} placeholder={$_("option_select")} />
 
         <br />
         <input id="minutesInput" type="text" placeholder="{$_("desc_min")}" value="{currentMinutes_l}" class="headingInput" on:input={funktionbeiInputMinutes}>
@@ -91,28 +87,66 @@
 
         <button on:click="{toggleNavbar}" class="toggle-button {currentLocale === 'en' ? 'en' : ''}">{$_("toggle_navbar")}</button>
 
-        <select class="headingInput" bind:value={$selectedOptionB} on:change={() => {
-          selectedOptionB.update(so => $selectedOptionB)
-        }} disabled={!$secondDropdownEnabled}>
-          <option selected disabled>{$_("option_select")}</option> 
-          {#each sortOpt as option} 
-              <option value={option}>{option}</option>
-          {/each}
-        </select>
+        <Svelecte bind:value={$selectedOptionB} options={items} placeholder={$_("option_select")} disabled={!$secondDropdownEnabled} />
         
         <br>
-        <input class="public_check" type="checkbox" bind:checked={$showAltenPflegeHeim}> {$_("alt_plu")}
-        <input class="public_check" type="checkbox" bind:checked={$showKindergarten}> {$_("kin_plu")}
-        <input class="public_check" type="checkbox" bind:checked={$showUnis}> {$_("uni_plu")}
+        <input class="public_check" type="checkbox" bind:checked={$showAltenPflegeHeim}> {$_("alt_plu")} <span class="altdot"></span>
+        <input class="public_check" type="checkbox" bind:checked={$showKindergarten}> {$_("kin_plu")} <span class="kindot"></span>
+        <input class="public_check" type="checkbox" bind:checked={$showUnis}> {$_("uni_plu")} <span class="unidot"></span>
         <br>
-        <input class="public_check" type="checkbox" bind:checked={$showMus}> {$_("mus_plu")}
-        <input class="public_check" type="checkbox" bind:checked={$showBib}> {$_("bib_plu")}
+        <input class="public_check" type="checkbox" bind:checked={$showMus}> {$_("mus_plu")} <span class="musdot"></span>
+        <input class="public_check" type="checkbox" bind:checked={$showBib}> {$_("bib_plu")} <span class="bibdot"></span>
       
     </div>
   </nav>
 </div>
 
 <style>
+    .altdot { 
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #8ABF98;
+      margin-right: 5px;
+    }
+
+    .kindot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #FFC107;
+      margin-right: 5px;
+    }
+    
+    .unidot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #B84ED3;
+      margin-right: 5px;
+    }
+
+    .musdot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #1E88E5;
+      margin-right: 5px;
+    }
+
+    .bibdot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #D81B60;
+      margin-right: 5px;
+    }
+
     .public_check {
       position: sticky;
       display: flexbox;
