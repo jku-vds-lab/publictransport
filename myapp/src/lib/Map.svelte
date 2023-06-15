@@ -94,6 +94,13 @@
     let markers_uni = [];
     let markers_mus = [];
     let markers_bib = [];
+
+    const check_first_popup = {};
+    check_first_popup["bib"] = true; 
+    check_first_popup["mus"] = true;
+    check_first_popup["unis"] = true;
+    check_first_popup["pflege"] = true;
+    check_first_popup["kindergarten"] = true;
   
     onMount(async() => {
       popupVisible = true; 
@@ -185,7 +192,7 @@
       });
       // Add cluster layer
       addCluster('pflege', '#8ABF98', '/alt.png');
-    } else {
+      } else {
       // Remove source and layers
       try {
         map.removeLayer('pflege-cluster');
@@ -219,7 +226,7 @@
         clusterRadius: 50
       });
       addCluster('kindergarten', '#FFC107', '/kin.png');
-    } else {
+      } else {
       try {
         map.removeLayer('kindergarten-cluster');
         map.removeLayer('kindergarten-cluster-count');
@@ -254,7 +261,7 @@
       });
 
       addCluster('unis', '#B84ED3', '/uni.png');
-    } else {
+      } else {
       try {
         map.removeLayer('unis-cluster');
         map.removeLayer('unis-cluster-count');
@@ -289,7 +296,7 @@
       });
 
       addCluster('mus', '#1E88E5', '/mus.png');
-    } else {
+      } else {
       try {
         map.removeLayer('mus-cluster');
         map.removeLayer('mus-cluster-count');
@@ -324,7 +331,7 @@
       });
 
       addCluster('bib', '#D81B60', '/bib.png');
-    } else {
+      } else {
       try {
         map.removeLayer('bib-cluster');
         map.removeLayer('bib-cluster-count');
@@ -332,7 +339,7 @@
         map.removeLayer('bib-point_background');
         map.removeSource('bib');
       } catch (error) {
-        console.log(error)
+        //nothing
       }
     }
 
@@ -362,10 +369,12 @@
       });
 
       map.loadImage(pathPic, function(error, image) {
-        if (error) throw error;
+        if (error) {
+          //nothing
+        };
         if (pathPic == '/uni.png') {
-        map.addImage('uniIcon', image);
-        map.addLayer({
+          map.addImage('uniIcon', image);     
+          map.addLayer({
           id: id + '-point',
           type: 'symbol',
           source: id,
@@ -461,15 +470,19 @@
       });
 
       // Add popup
-      map.on('click', id + '-point', function (e) {
-        var coordinates = e.features[0].geometry.coordinates.slice();
-        var name = e.features[0].properties.name;
+      if (check_first_popup[id]) {
+        map.on('click', id + '-point', function (e) {
+          var coordinates = e.features[0].geometry.coordinates.slice();
+          var name = e.features[0].properties.name;
 
-        new Popup({ offset: [0, -10] })
-            .setLngLat(coordinates)
-            .setHTML(name)
-            .addTo(map);
-      });
+          new Popup({ offset: [0, -10] })
+              .setLngLat(coordinates)
+              .setHTML(name)
+              .addTo(map);
+        });
+        check_first_popup[id] = false;
+      }
+
       // Add popup on mouseenter
       map.on('mouseenter', id + '-point', function (e) {
         map.getCanvas().style.cursor = 'pointer';
