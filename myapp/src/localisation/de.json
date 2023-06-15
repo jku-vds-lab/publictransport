@@ -24,5 +24,8 @@
   "mus_plu": "Museen",
   "mus_sin": "Museum",
   "bib_plu": "Bibliotheken",
-  "bib_sin": "Bibliothek"
+  "bib_sin": "Bibliothek",
+  "integerAlert": "Bitte gib die Dauer in Minuten als ganze Zahl an.",
+  "yourCoords": "Deine Koordinaten:",
+  "yourNextStation": "Die nächstgelegene Station ist:"
 }

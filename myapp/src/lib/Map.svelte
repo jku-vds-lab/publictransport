@@ -13,6 +13,7 @@
     import { _ } from 'svelte-i18n'
     import { locale } from '../i18n';
     import { BASE_URL } from '../main';
+    import { get } from 'svelte/store';
    
     let map;
     let mapContainer;
@@ -24,6 +25,14 @@
     let request_url_start = BASE_URL + "feed?"
     let request_url_start2 = BASE_URL + "marker?"
     let request_url_start3 = BASE_URL + "nearest_station?"
+
+    let isGettingCoords = false
+    let customeCoords
+
+    function getCoords() {
+      isGettingCoords = true;
+      map.getCanvas().style.cursor = 'crosshair';
+    }
 
     function changeLanguage(lang) {
       locale.set(lang);
@@ -131,6 +140,21 @@
         zoom: initialState.zoom
       });
       map.addControl(new NavigationControl(null),'top-right');
+      map.on('click', (e) => {
+      if (isGettingCoords) {
+        const { lng, lat } = e.lngLat;
+        initialState.lat = lat
+        initialState.lng = lng
+        isGettingCoords = false;
+        map.getCanvas().style.cursor = '';
+        startClosestStation().then(() => {
+          selectedOption.set(nearStation)
+          let yourCoords_ = get(_)("yourCoords")
+          let yourNextStation_ = get(_)("yourNextStation")
+          alert(`${yourCoords_} ${lng}, ${lat}. ${yourNextStation_} ${nearStation}`)
+          })
+        }
+      });
     })
   
     onDestroy(() => {
@@ -581,6 +605,9 @@
       src="https://api.maptiler.com/resources/logo.svg" alt="MapTiler logo"/></a>
     <div class="map" id="map" bind:this={mapContainer}></div>
   </div>
+  <div class="GetCoordsButtonDiv" class:open="{!$isOpen}">
+    <button on:click={getCoords} class="GetCoordsButton">.</button>
+  </div>
 
   <div class="language-switcher">
     <button on:click={() => changeLanguage('en')} class="language-button-en">EN</button>
@@ -589,6 +616,33 @@
   
   <style>
 
+    .GetCoordsButton {
+      color: transparent;
+      background-color: transparent;
+      background-image: url('../crosshairs-solid.svg');
+      background-position: center;
+      background-repeat: no-repeat;
+      border: none;
+      outline: none;
+      z-index: 120;
+      height: 25px;
+    }
+
+    .GetCoordsButton:active {
+      background-size: 80%;
+    }
+
+    .GetCoordsButtonDiv {
+      position: fixed;
+      z-index: 120;
+      top: 85px;
+      left: 410px;
+      transition: left 0.35s ease-in-out;
+    }
+
+    .GetCoordsButtonDiv.open {
+      left: -70px;
+    }
     .language-switcher {
       position: fixed;
       bottom: 25px;

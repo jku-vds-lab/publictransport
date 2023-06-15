@@ -7,6 +7,7 @@
     import { locale } from '../i18n';
     import { onMount } from 'svelte';
     import { BASE_URL } from "../main";
+    import { get } from "svelte/store";
     
     onMount((async) => {
         // Set the initial value for the select element
@@ -39,7 +40,8 @@
         currentMinutes_l = value;
         currentMinutes.update(cm => currentMinutes_l)
       } else {
-        alert("Please insert an integer.");
+        let alertM = get(_)("integerAlert")
+        alert(alertM);
         currentMinutes_l = "";
         currentMinutes.update(cm => currentMinutes_l)
       }

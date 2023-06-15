@@ -24,5 +24,8 @@
   "mus_plu": "Museums",
   "mus_sin": "Museum",
   "bib_plu": "Libraries",
-  "bib_sin": "Library"
+  "bib_sin": "Library",
+  "integerAlert": "Pls select an Integer for the timelimit",
+  "yourCoords": "Your coordinates:",
+  "yourNextStation": "the closest station is:"
 }
