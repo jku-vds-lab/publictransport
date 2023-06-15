@@ -102,136 +102,168 @@
 </div>
 
 <style>
-    .altdot { 
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: #8ABF98;
-      margin-right: 5px;
+
+  :global(.svelecte-control) {
+      --sv-active-border: 1px solid rgb(255, 255, 255) !important;
+      --sv-border-color: #1A1A1A !important;	
+      --sv-hover-border-color: white !important;	
+      --sv-bg: #1A1A1A !important;
+      --sv-disabled-bg: rgb(47, 45, 45) !important;
+      --sv-item-color: rgb(188, 187, 187) !important;
+      --sv-item-active-color: #1a1a1a !important;
+      --sv-item-btn-bg-hover: rgb(47, 45, 45) !important;
+      --sv-highlight-bg: #653939 !important;
+      --sv-color: white !important;
     }
 
-    .kindot {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: #FFC107;
-      margin-right: 5px;
-    }
-    
-    .unidot {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: #B84ED3;
-      margin-right: 5px;
-    }
+  :global(.sv-control) {
+    border-radius: 12px !important;
+    height: 26px;
+    position: relative;
+    padding: 0px;
+  }
 
-    .musdot {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: #1E88E5;
-      margin-right: 5px;
-    }
+  :global(.svelecte) {
+    height: 26px;
+    width: 360px;
+    left: 70px;
+  }
 
-    .bibdot {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background-color: #D81B60;
-      margin-right: 5px;
-    }
+  :global(.sv-dropdown) {
+    overflow: clip !important;
+    height: 180px;
+  }
 
-    .public_check {
-      position: sticky;
-      display: flexbox;
-    }
+  .altdot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #8ABF98;
+    margin-right: 5px;
+  }
 
-    .heading {
-      position: absolute;
-      left: 0px;
-      top: 0px;
-      width: 500px;
-      height: 240;
-      z-index: 100;
-      margin : 10px;
-      margin-left: -20px;
-      padding: 10px;
-      padding-left: 5px;
-      padding-right: 30px;
-      padding-bottom: 30px;
-      border-radius: 30px;
-      background-color: 
-  rgb(233, 233, 34);
-      color: 
-  rgb(24, 10, 10);
-    }
-
-    .navbar-container {
-      position: fixed;
-      top: 10px;
-      left: -480px;
-      width: 515px;
-      height: 300px;
-      overflow-y: hidden;
-      z-index: 110;
-      overflow-x: hidden;
-      transition: left 0.35s ease-in-out;
-    }
-
-    .navbar-container.open {
-      left: 0;
-    }
-
-    .toggle-button {
-      position: absolute;
-      z-index: 100;
-      transform: rotate(270deg);
-      font-family: sans-serif;
-      font-size: 12px;
-      line-height: 18px;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: rgb(47, 45, 45);
-      top: 115px !important;
-      left: 460px !important;
-    }
-
-    .toggle-button.en {
-    left: 485px !important;
-    }
+  .kindot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #FFC107;
+    margin-right: 5px;
+  }
   
-    .heading > h2 {
-      padding: 0px;
-      margin: 2px;
-    }
+  .unidot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #B84ED3;
+    margin-right: 5px;
+  }
 
-    .heading > h4 {
-      padding: 0px;
-      margin: 6px;
-      margin-bottom: 10px;
-    }
+  .musdot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #1E88E5;
+    margin-right: 5px;
+  }
 
-    .headingInput {
-      position: relative;
-      padding: 5px;
-      margin: 1px;
-      color: rgb(188, 187, 187);
-    }
+  .bibdot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #D81B60;
+    margin-right: 5px;
+  }
 
-    .headingInput::placeholder {
-      color: rgb(188, 187, 187);
-    }
+  .public_check {
+    position: sticky;
+    display: flexbox;
+  }
 
-    .checkBox {
-      display: block;
-    }
+  .heading {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 500px;
+    height: 240;
+    z-index: 100;
+    margin : 10px;
+    margin-left: -20px;
+    padding: 10px;
+    padding-left: 5px;
+    padding-right: 30px;
+    padding-bottom: 30px;
+    border-radius: 30px;
+    background-color: 
+rgb(233, 233, 34);
+    color: 
+rgb(24, 10, 10);
+  }
 
-    
+  .navbar-container {
+    position: fixed;
+    top: 10px;
+    left: -480px;
+    width: 515px;
+    height: 420px;
+    overflow-y: visible;
+    z-index: 110;
+    overflow-x: hidden;
+    transition: left 0.35s ease-in-out;
+  }
+
+  .navbar-container.open {
+    left: 0;
+  }
+
+  .toggle-button {
+    position: absolute;
+    z-index: 100;
+    transform: rotate(270deg);
+    font-family: sans-serif;
+    font-size: 12px;
+    line-height: 18px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: rgb(47, 45, 45);
+    top: 140px !important;
+    left: 460px !important;
+  }
+
+  .toggle-button.en {
+  left: 485px !important;
+  }
+
+  .heading > h2 {
+    padding: 0px;
+    margin: 2px;
+  }
+
+  .heading > h4 {
+    padding: 0px;
+    margin: 6px;
+    margin-bottom: 10px;
+  }
+
+  .headingInput {
+    position: relative;
+    padding: 5px;
+    margin: 1px;
+    color: rgb(188, 187, 187);
+  }
+
+  .headingInput::placeholder {
+    color: rgb(188, 187, 187);
+  }
+
+  .checkBox {
+    display: block;
+  }
+
+  
 </style>
