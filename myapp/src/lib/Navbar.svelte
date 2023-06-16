@@ -131,7 +131,7 @@
 
   :global(.sv-dropdown) {
     overflow: clip !important;
-    height: 180px;
+    height: 125px;
   }
 
   .altdot {
@@ -209,7 +209,7 @@ rgb(24, 10, 10);
     top: 10px;
     left: -480px;
     width: 515px;
-    height: 420px;
+    height: 365px;
     overflow-y: visible;
     z-index: 110;
     overflow-x: hidden;
