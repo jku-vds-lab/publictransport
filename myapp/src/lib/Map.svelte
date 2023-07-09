@@ -3,7 +3,7 @@
     import { Map, NavigationControl, Marker, LngLat, Popup  } from 'maplibre-gl'
     import 'maplibre-gl/dist/maplibre-gl.css'
     import Navbar from './Navbar.svelte';
-    import {isOpen, url_stored, marker, currentMinutes, currentTime, selectedOption, selectedOptionB, secondDropdownEnabled, showAltenPflegeHeim, showKindergarten, showBib, showMus, showUnis} from '../stores.js';
+    import {isOpen, url_stored, marker, currentMinutes, currentTime, selectedOption, selectedOptionB, showAltenPflegeHeim, showKindergarten, showBib, showMus, showUnis} from '../stores.js';
     import { alten_pflege_coords } from "./alten_pflege_heim.js";
     import { kinder_coords } from "./kindergarten.js";
     import { unis_coords } from './unis';
@@ -187,7 +187,7 @@
         type: 'geojson',
         data: geojson,
         cluster: true,
-        clusterMaxZoom: 10,
+        clusterMaxZoom: 12,
         clusterRadius: 50
       });
       // Add cluster layer
@@ -256,7 +256,7 @@
         type: 'geojson',
         data: geojson,
         cluster: true,
-        clusterMaxZoom: 10,
+        clusterMaxZoom: 12,
         clusterRadius: 50
       });
 
@@ -291,7 +291,7 @@
         type: 'geojson',
         data: geojson,
         cluster: true,
-        clusterMaxZoom: 10,
+        clusterMaxZoom: 12,
         clusterRadius: 50
       });
 
@@ -326,7 +326,7 @@
         type: 'geojson',
         data: geojson,
         cluster: true,
-        clusterMaxZoom: 10,
+        clusterMaxZoom: 12,
         clusterRadius: 50
       });
 
@@ -353,18 +353,6 @@
         paint: {
           'circle-color': color,
           'circle-radius': ['step',['get', 'point_count'], 20, 10, 30, 50, 40]
-        }
-      });
-
-      map.addLayer({
-        id: id + '-cluster-count',
-        type: 'symbol',
-        source: id,
-        filter: ['has', 'point_count'],
-        layout: {
-          'text-field': '{point_count_abbreviated}',
-          'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-          'text-size': 12
         }
       });
 
@@ -456,6 +444,53 @@
         } 
       });
 
+      // determine the icon size
+      let iconSize = 0.03; // default size
+      let iconOffset = [0, 0]
+      let type = pathPic.substring(1,4);
+
+      switch(type) {
+        case 'kin':
+          iconSize = 0.039;
+          break;
+        case 'uni':
+          iconSize = 0.035;
+          break;
+        case 'mus':
+          iconSize = 0.016;
+          break;
+        case 'bib':
+          iconSize = 0.043;
+          iconOffset = [-120, 0];
+          break;
+        case 'alt':
+          iconSize = 0.03;
+          iconOffset = [-200, 0];
+          break;
+      }
+
+      map.addLayer({
+        id: id + '-cluster-count',
+        type: 'symbol',
+        source: id,
+        filter: ['has', 'point_count'],
+        layout: {
+          'text-field': '{point_count_abbreviated}' ,
+          'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+          'text-size': 12,
+          'text-anchor': 'right',
+          'text-offset': [-0.42, 0],
+          'icon-size': iconSize,
+          'icon-allow-overlap': false,
+          'icon-ignore-placement': true,
+          'icon-anchor': 'left',
+          'icon-optional': true,
+          'icon-offset': iconOffset,
+          'icon-image': pathPic.substring(1,4)+'Icon',
+        }
+      });
+
+
       map.addLayer({
         id: id + '-point_background',
         type: 'circle',
@@ -493,14 +528,52 @@
       });
     }
 
+    //tooltip select Position function (GetCoordsButton)
+    function tooltip(node, ctx) {
+      const tip = document.createElement('span');
+      tip.className = 'tooltip';
+      tip.textContent = $_(ctx);
+      node.appendChild(tip);
+
+      const update = () => {
+          tip.textContent = $_(ctx);
+      };
+
+      update();
+
+      const unsubscribe = locale.subscribe(() => {
+        update();
+      });
+
+      const handleMouseover = () => {
+        tip.style.visibility = 'visible';
+      };
+
+      const handleMouseout = () => {
+        tip.style.visibility = 'hidden';
+      };
+
+      node.addEventListener('mouseover', handleMouseover);
+      node.addEventListener('mouseout', handleMouseout);
+
+      return {
+        update,
+        destroy() {
+          unsubscribe();
+          node.removeEventListener('mouseover', handleMouseover);
+          node.removeEventListener('mouseout', handleMouseout);
+        }
+      };
+    }
+
     function toggleNavbar() {
       isOpen.update(value => !value);
     }
 
     const startAction = () => {
       return new Promise((resolve, reject) => {
-        let force_setting = "&forced=forced" //secondDropdownEnabled
-        if (!$secondDropdownEnabled) {
+        let force_setting = "&forced=forced" //secondDropdown Enabled
+        if ($selectedOptionB == null) { //secondDropdown Disabled
           force_setting = "&forced=not_forced"
         }
         url = request_url_start + "starting_station=" + String($selectedOption) + "&starting_time=" + String($currentTime).substring(0, 5) + ':00' + "&timelimit=" + String($currentMinutes) + force_setting;
@@ -628,7 +701,7 @@
           return [];
         })
         //###### B
-        if ($secondDropdownEnabled) {
+        if (!$selectedOptionB == null) {
           await startActionB() 
           marker_b.remove();
           if (map.getLayer('polygonsB')) map.removeLayer('polygonsB');
@@ -710,7 +783,7 @@
     <div class="map" id="map" bind:this={mapContainer}></div>
   </div>
   <div class="GetCoordsButtonDiv" class:open="{!$isOpen}">
-    <button on:click={getCoords} class="GetCoordsButton">.</button>
+    <button on:click={getCoords} class="GetCoordsButton" use:tooltip={"tooltip_select_custom_place"}>.</button>
   </div>
 
   <div class="language-switcher">
@@ -719,6 +792,21 @@
   </div>
   
   <style>
+
+    :global(.tooltip) {
+      visibility: hidden;
+      background-color: rgba(255, 255, 255, 0.8);
+      color: black;
+      border-radius: 10px;
+      text-align: center;
+      padding: 7px;
+      position: absolute;
+      width: 100px;
+      z-index: 1;
+      top: 50%;
+      left: 260%;
+      transform: translate(-50%, -50%);
+    }
 
     .GetCoordsButton {
       color: transparent;
@@ -730,10 +818,11 @@
       outline: none;
       z-index: 120;
       height: 25px;
+      background-size: 50%;
     }
 
     .GetCoordsButton:active {
-      background-size: 80%;
+      background-size: 40%;
     }
 
     .GetCoordsButtonDiv {

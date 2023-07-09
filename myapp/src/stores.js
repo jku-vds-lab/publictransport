@@ -7,7 +7,6 @@ export const selectedOptionB = writable("should be selectedOption")
 export const currentTime = writable("should be currentTime")
 export const currentMinutes = writable("should be currentMinutes")
 export const isOpen = writable(true);
-export const secondDropdownEnabled = writable(false);
 export const showAltenPflegeHeim = writable(false);
 export const showKindergarten = writable(false);
 export const showUnis = writable(false);

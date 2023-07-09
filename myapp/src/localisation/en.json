@@ -29,5 +29,6 @@
   "yourCoords": "Your coordinates:",
   "yourNextStation": "the closest station is:",
   "min_input_desc": "Minutes: ",
-  "time_input_desc": "Start time: "
+  "time_input_desc": "Start time: ",
+  "tooltip_select_custom_place": "Select any place on the map and get the nearest station"
 }
