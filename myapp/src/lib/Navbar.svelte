@@ -75,9 +75,9 @@
         <Svelecte bind:value={$selectedOption} options={items} placeholder={$_("option_select")} />
 
         <br />
-        <input id="minutesInput" type="text" placeholder="{$_("desc_min")}" value="{currentMinutes_l}" class="headingInput" on:input={funktionbeiInputMinutes}>
+        {$_("min_input_desc")} <input id="minutesInput" type="text" placeholder="{$_("desc_min")}" value="{currentMinutes_l}" class="headingInput" on:input={funktionbeiInputMinutes}>
         <br />
-        <input id="timeInput" type="text" placeholder="{$_("desc_time")}" value="{currentTime_l}" class="headingInput" on:input={funktionbeiInputTime}>
+        {$_("time_input_desc")} <input id="timeInput" type="text" placeholder="{$_("desc_time")}" value="{currentTime_l}" class="headingInput" on:input={funktionbeiInputTime}>
         <br />
 
         <label class="checkBox">

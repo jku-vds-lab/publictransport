@@ -27,5 +27,7 @@
   "bib_sin": "Bibliothek",
   "integerAlert": "Bitte gib die Dauer in Minuten als ganze Zahl an.",
   "yourCoords": "Deine Koordinaten:",
-  "yourNextStation": "Die nächstgelegene Station ist:"
+  "yourNextStation": "Die nächstgelegene Station ist:",
+  "min_input_desc": "Minuten: ",
+  "time_input_desc": "Startzeit: "
 }

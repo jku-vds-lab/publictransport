@@ -27,5 +27,7 @@
   "bib_sin": "Library",
   "integerAlert": "Pls select an Integer for the timelimit",
   "yourCoords": "Your coordinates:",
-  "yourNextStation": "the closest station is:"
+  "yourNextStation": "the closest station is:",
+  "min_input_desc": "Minutes: ",
+  "time_input_desc": "Start time: "
 }
