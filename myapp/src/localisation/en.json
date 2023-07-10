@@ -30,5 +30,7 @@
   "yourNextStation": "the closest station is:",
   "min_input_desc": "Minutes: ",
   "time_input_desc": "Start time: ",
-  "tooltip_select_custom_place": "Select any place on the map and get the nearest station"
+  "tooltip_select_custom_place": "Select any place on the map and get the nearest station",
+  "legend_desc": "The radius of the circle represents how much time is left to walk after you reach the station. The maximum walking time is limited at 15 minutes",
+  "legend_header": "Time left"
 }

@@ -85,12 +85,12 @@
         <Svelecte bind:value={$selectedOptionB} options={items} placeholder={$_("option_select")} virtualList = {true}/>
         
         <br>
-        <input class="public_check" type="checkbox" bind:checked={$showAltenPflegeHeim}> {$_("alt_plu")} <span class="altdot"></span>
-        <input class="public_check" type="checkbox" bind:checked={$showKindergarten}> {$_("kin_plu")} <span class="kindot"></span>
-        <input class="public_check" type="checkbox" bind:checked={$showUnis}> {$_("uni_plu")} <span class="unidot"></span>
+        <input class="public_check" type="checkbox" bind:checked={$showAltenPflegeHeim}> {$_("alt_plu")} <span class="altdot"><img class="alt_png_icons" src="/alt.png" alt="elderly care icon"></span>
+        <input class="public_check" type="checkbox" bind:checked={$showKindergarten}> {$_("kin_plu")} <span class="kindot"><img class="kin_png_icons" src="/kin.png" alt="kindergarten icon"></span>
+        <input class="public_check" type="checkbox" bind:checked={$showUnis}> {$_("uni_plu")} <span class="unidot"><img class="uni_png_icons" src="/uni.png" alt="university icon"></span>
         <br>
-        <input class="public_check" type="checkbox" bind:checked={$showMus}> {$_("mus_plu")} <span class="musdot"></span>
-        <input class="public_check" type="checkbox" bind:checked={$showBib}> {$_("bib_plu")} <span class="bibdot"></span>
+        <input class="public_check" type="checkbox" bind:checked={$showMus}> {$_("mus_plu")} <span class="musdot"><img class="mus_png_icons" src="/mus.png" alt="museum icon"></span>
+        <input class="public_check" type="checkbox" bind:checked={$showBib}> {$_("bib_plu")} <span class="bibdot"><img class="bib_png_icons" src="/bib.png" alt="library icon"></span>
       
     </div>
   </nav>

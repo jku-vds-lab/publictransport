@@ -30,5 +30,7 @@
   "yourNextStation": "Die nächstgelegene Station ist:",
   "min_input_desc": "Minuten: ",
   "time_input_desc": "Startzeit: ",
-  "tooltip_select_custom_place": "Wähle einen beliebigen Standort auf der Karte und erhalte die nächstgelegene Haltestelle"
+  "tooltip_select_custom_place": "Wähle einen beliebigen Standort auf der Karte und erhalte die nächstgelegene Haltestelle",
+  "legend_desc": "Der Radius des Kreises gibt an, wie viel Zeit Ihnen noch zu Fuß bleibt, nachdem Sie die Station erreicht haben. Die maximale Gehzeit ist auf 15 Minuten begrenzt.",
+  "legend_header": "Übrige Zeit"
 }

@@ -531,7 +531,11 @@
     //tooltip select Position function (GetCoordsButton)
     function tooltip(node, ctx) {
       const tip = document.createElement('span');
-      tip.className = 'tooltip';
+      if (ctx == "legend_desc") {
+        tip.className = 'tooltip2';
+      } else {
+        tip.className = 'tooltip';
+      }
       tip.textContent = $_(ctx);
       node.appendChild(tip);
 
@@ -786,12 +790,94 @@
     <button on:click={getCoords} class="GetCoordsButton" use:tooltip={"tooltip_select_custom_place"}>.</button>
   </div>
 
+  <div class="legend_field_div" use:tooltip={"legend_desc"}>
+    <div class="legend_header">
+      {$_("legend_header")} <br>
+    </div>
+    <span class="legend_dot1"></span> 3 Min<br>
+    <span class="legend_dot2"></span> 10 Min<br>
+    <span class="legend_dot3"></span> 15 Min
+  </div>
+
   <div class="language-switcher">
     <button on:click={() => changeLanguage('en')} class="language-button-en">EN</button>
     <button on:click={() => changeLanguage('de')} class="language-button-de">DE</button>
   </div>
   
   <style>
+
+    .legend_header {
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .legend_dot1 {
+      display: inline-block;
+      justify-content: center;
+      align-items: center;
+      width: 10px;
+      height: 10px;
+      position: relative;
+      top: 3px;
+      right: 16px;
+      border-radius: 50%;
+      background-color: #ff8400a2;
+      margin-right: 5px;
+    }
+
+    .legend_dot2 {
+      display: inline-block;
+      justify-content: center;
+      align-items: center;
+      width: 20px;
+      height: 20px;
+      position: relative;
+      top: 8px;
+      right: 5px;
+      border-radius: 50%;
+      background-color: #ff8400a2;
+      margin-right: 5px;
+    }
+
+    .legend_dot3 {
+      display: inline-block;
+      justify-content: center;
+      align-items: center;
+      width: 30px;
+      height: 30px;
+      position: relative;
+      top: 10px;
+      border-radius: 50%;
+      background-color: #ff8400a2;
+      margin-right: 5px;
+    }
+
+    .legend_field_div {
+      position: fixed;
+      z-index: 100;
+      top: 110px;
+      right: 10px;
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: right;
+      box-shadow: 0 0 0 2px rgba(0,0,0,.1);
+    }
+
+    :global(.tooltip2) {
+      visibility: hidden;
+      background-color: rgba(255, 255, 255, 0.8);
+      color: black;
+      border-radius: 10px;
+      text-align: center;
+      padding: 7px;
+      position: absolute;
+      width: 100px;
+      z-index: 1;
+      top: 50%;
+      right: 50%;
+      transform: translate(-50%, -50%);
+    }
 
     :global(.tooltip) {
       visibility: hidden;
