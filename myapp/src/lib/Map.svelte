@@ -3,7 +3,7 @@
     import { Map, NavigationControl, Marker, LngLat, Popup  } from 'maplibre-gl'
     import 'maplibre-gl/dist/maplibre-gl.css'
     import Navbar from './Navbar.svelte';
-    import {isOpen, url_stored, marker, currentMinutes, currentTime, selectedOption, selectedOptionB, showAltenPflegeHeim, showKindergarten, showBib, showMus, showUnis} from '../stores.js';
+    import {isOpen, url_stored, marker, currentMinutes, currentTime, selectedOption, selectedOptionB, showAltenPflegeHeim, showKindergarten, showBib, showMus, showUnis, showTutorial} from '../stores.js';
     import { alten_pflege_coords } from "./alten_pflege_heim.js";
     import { kinder_coords } from "./kindergarten.js";
     import { unis_coords } from './unis';
@@ -14,6 +14,7 @@
     import { locale } from '../i18n';
     import { BASE_URL } from '../main';
     import { get } from 'svelte/store';
+    import Tutorial from './Tutorial.svelte';
    
     let map;
     let mapContainer;
@@ -87,13 +88,10 @@
     let apicall = "waiting for apicall...";
     var marker_array = null
     let popupVisible = false;
+    let legendVisible = false;
     let initialState = null;
     let nearStation = null;
-    let markers_pflege = [];
-    let markers_kinder = [];
-    let markers_uni = [];
-    let markers_mus = [];
-    let markers_bib = [];
+
 
     const check_first_popup = {};
     check_first_popup["bib"] = true; 
@@ -630,6 +628,7 @@
         showSpinnerB()
         await startAction()
         marker_a.remove();
+        legendVisible = true;
         if (map.getLayer('polygons')) map.removeLayer('polygons');
         if (map.getSource('map_source')) map.removeSource('map_source');
         marker_array = JSON.parse("[" + String(strii) + "]");
@@ -754,6 +753,14 @@
         }
     } 
   </script>
+
+  {#if $showTutorial}
+    <Tutorial />
+  {/if}
+
+  <div id = "element9" class = "top_right_dot">
+    .X
+  </div>
   
   {#if popupVisible}
     <div class="popup-overlay">
@@ -761,6 +768,10 @@
         <h2>{$_("popup_head")}</h2>
         <p>{$_("popup_text")}</p>
         <button on:click={closePopup}>{$_("popup_button")}</button>
+        <button on:click={() => {
+          $showTutorial = true; 
+          closePopup();
+        }}>{$_("tutorial_start_button")}</button>
         <button on:click={() => window.open('https://forms.office.com/e/Gvf0iveeWc', '_blank')} class="popup-button secondary">{$_("link_quiz")}</button>
       </div>
     </div>
@@ -768,7 +779,7 @@
 
   <div class="map-wrap">
     <div>
-      <button class= "startsearchb" on:click={startA}><h4>{$_("start_search")}</h4></button>
+      <button class= "startsearchb" id="element8" on:click={startA}><h4>{$_("start_search")}</h4></button>
     </div>
     <div class="spinner" id="spin" style="display: none;">
       <h4>Loading ...</h4>
@@ -786,25 +797,33 @@
       src="https://api.maptiler.com/resources/logo.svg" alt="MapTiler logo"/></a>
     <div class="map" id="map" bind:this={mapContainer}></div>
   </div>
-  <div class="GetCoordsButtonDiv" class:open="{!$isOpen}">
+  <div class="GetCoordsButtonDiv" id="element7" class:open="{!$isOpen}">
     <button on:click={getCoords} class="GetCoordsButton" use:tooltip={"tooltip_select_custom_place"}>.</button>
   </div>
 
-  <div class="legend_field_div" use:tooltip={"legend_desc"}>
-    <div class="legend_header">
-      {$_("legend_header")} <br>
+  {#if legendVisible}
+    <div class="legend_field_div" use:tooltip={"legend_desc"}>
+      <div class="legend_header">
+        {$_("legend_header")} <br>
+      </div>
+      <span class="legend_dot1"></span> 3 Min<br>
+      <span class="legend_dot2"></span> 10 Min<br>
+      <span class="legend_dot3"></span> 15 Min
     </div>
-    <span class="legend_dot1"></span> 3 Min<br>
-    <span class="legend_dot2"></span> 10 Min<br>
-    <span class="legend_dot3"></span> 15 Min
-  </div>
+  {/if}
 
-  <div class="language-switcher">
+  <div class="language-switcher" id="element1">
     <button on:click={() => changeLanguage('en')} class="language-button-en">EN</button>
     <button on:click={() => changeLanguage('de')} class="language-button-de">DE</button>
   </div>
   
   <style>
+    .top_right_dot{
+      position: absolute;
+      top: 46px;
+      right: 20px;
+      z-index: 1;
+    }
 
     .legend_header {
       text-align: center;
@@ -929,7 +948,7 @@
       right: 5px;
       border-radius: 5px;
       padding: 5px;
-      z-index: 1000;
+      z-index: 10010;
     }
 
     .language-button-en {

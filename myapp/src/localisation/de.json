@@ -10,7 +10,7 @@
   "start_select": "Wähle eine Start-Haltestelle",
   "popup_text": "Dieses Onlinetool ermöglicht es dir verschiedene Orte/Haltestellen schnell und einfach auszuwählen und dann in einer intuitiven Visualisierung zu sehen wie gut die Station ans Öffi Netz angeschlossen ist und wie weit man in einer selbst gewählten Zeitspanne reisen könnte. Wähle dazu zuerst links oben im Eingabefeld eine Starthaltestelle aus, dann eine Zeitbegrenzung und noch eine Startzeit. Klicke nun auf Suche starten und warte kurz. (Dieses Tool beinhaltet nur Daten für Oberösterreich) ",
   "popup_head": "Willkommen",
-  "popup_button": "Ich will es ausprobieren.",
+  "popup_button": "Verstanden",
   "popup2_prefix": "Der nächste Bus/Zug an dieser Station kommt erst um: ",
   "popup2_suffix": "\n Soll die Startzeit angepasst werden?",
   "link_quiz": "Zum Feedback-Quiz",
@@ -32,5 +32,16 @@
   "time_input_desc": "Startzeit: ",
   "tooltip_select_custom_place": "Wähle einen beliebigen Standort auf der Karte und erhalte die nächstgelegene Haltestelle",
   "legend_desc": "Der Radius des Kreises gibt an, wie viel Zeit Ihnen noch zu Fuß bleibt, nachdem Sie die Station erreicht haben. Die maximale Gehzeit ist auf 15 Minuten begrenzt.",
-  "legend_header": "Übrige Zeit"
+  "legend_header": "Übrige Zeit",
+  "tutorial_confirm": "Verstanden",
+  "p1_desc": "Zuerst können Sie hier die Sprache anpassen",
+  "p2_desc": "Hier kann eine beliebige Starthaltestelle aus Oberösterreich ausgewählt werden. Von dieser Station aus wird berechnet wie weit man mit den Öffis kommt.",
+  "p3_desc": "Hier werden die Minuten angegeben wie lange die Reise maximal dauern soll. (Auswahl wirkt sich stark auf die Berechnungszeit aus)",
+  "p4_desc": "Hier wird die Zeit angegeben zu welcher man starten möchte.",
+  "p5_desc": "Dieses Feld erlaubt es eine zweite Station auszuwählen und ermöglicht es dadurch zwei Standorte zu vergleichen.",
+  "p6_desc": "Hier können diverse öffentliche Einrichtungen aus- bzw. eingeblendet werden.",
+  "p7_desc": "Mit einem Klick auf dieses Icon können Sie einen beliebigen Standort auf der Karte auswählen und Ihnen wird dann die nächstgelegene Haltestelle vorgeschlagen.",
+  "p8_desc": "Dieser Knopf startet die Suche.",
+  "p9_desc": "Hier oben befindet sich eine Mapsteuerung um zu zoomen und um die Map zu drehen",
+  "tutorial_start_button": "Einführung"
 }

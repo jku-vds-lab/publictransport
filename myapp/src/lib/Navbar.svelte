@@ -74,7 +74,7 @@
 
         <Svelecte bind:value={$selectedOption} options={items} placeholder={$_("option_select")} virtualList = {true}/>
 
-        <br />
+        <br id="element2"/>
         {$_("min_input_desc")} <input id="minutesInput" type="text" placeholder="{$_("desc_min")}" value="{currentMinutes_l}" class="headingInput" on:input={funktionbeiInputMinutes}>
         <br />
         {$_("time_input_desc")} <input id="timeInput" type="text" placeholder="{$_("desc_time")}" value="{currentTime_l}" class="headingInput" on:input={funktionbeiInputTime}>
@@ -88,7 +88,7 @@
         <input class="public_check" type="checkbox" bind:checked={$showAltenPflegeHeim}> {$_("alt_plu")} <span class="altdot"><img class="alt_png_icons" src="/alt.png" alt="elderly care icon"></span>
         <input class="public_check" type="checkbox" bind:checked={$showKindergarten}> {$_("kin_plu")} <span class="kindot"><img class="kin_png_icons" src="/kin.png" alt="kindergarten icon"></span>
         <input class="public_check" type="checkbox" bind:checked={$showUnis}> {$_("uni_plu")} <span class="unidot"><img class="uni_png_icons" src="/uni.png" alt="university icon"></span>
-        <br>
+        <br id="element6">
         <input class="public_check" type="checkbox" bind:checked={$showMus}> {$_("mus_plu")} <span class="musdot"><img class="mus_png_icons" src="/mus.png" alt="museum icon"></span>
         <input class="public_check" type="checkbox" bind:checked={$showBib}> {$_("bib_plu")} <span class="bibdot"><img class="bib_png_icons" src="/bib.png" alt="library icon"></span>
       
