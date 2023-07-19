@@ -12,5 +12,8 @@ export const showKindergarten = writable(false);
 export const showUnis = writable(false);
 export const showMus = writable(false);
 export const showBib = writable(false);
+export const showCin = writable(false);
+export const showKra = writable(false);
+export const showSch = writable(false);
 export const showTutorial = writable(false);
 

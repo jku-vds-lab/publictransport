@@ -3,12 +3,15 @@
     import { Map, NavigationControl, Marker, LngLat, Popup  } from 'maplibre-gl'
     import 'maplibre-gl/dist/maplibre-gl.css'
     import Navbar from './Navbar.svelte';
-    import {isOpen, url_stored, marker, currentMinutes, currentTime, selectedOption, selectedOptionB, showAltenPflegeHeim, showKindergarten, showBib, showMus, showUnis, showTutorial} from '../stores.js';
+    import {isOpen, url_stored, marker, currentMinutes, currentTime, selectedOption, selectedOptionB, showAltenPflegeHeim, showKindergarten, showBib, showMus, showUnis, showKra, showCin, showSch, showTutorial} from '../stores.js';
     import { alten_pflege_coords } from "./alten_pflege_heim.js";
     import { kinder_coords } from "./kindergarten.js";
     import { unis_coords } from './unis';
     import { mus_coords } from './mus';
-    import { bib_coords } from './bib';    
+    import { bib_coords } from './bib';
+    import { cin_coords } from './cin';
+    import { kra_coords } from './kra';
+    import { sch_coords } from './sch';  
     import { object_without_properties } from 'svelte/internal';
     import { _ } from 'svelte-i18n'
     import { locale } from '../i18n';
@@ -99,6 +102,9 @@
     check_first_popup["unis"] = true;
     check_first_popup["pflege"] = true;
     check_first_popup["kindergarten"] = true;
+    check_first_popup["cin"] = true; 
+    check_first_popup["kra"] = true; 
+    check_first_popup["sch"] = true; 
   
     onMount(async() => {
       popupVisible = true; 
@@ -341,6 +347,111 @@
       }
     }
 
+    // Kinos
+    $: if ($showCin) {
+      const geojson = {
+        type: 'FeatureCollection',
+        features: cin_coords.map(coord => ({
+          type: 'Feature',
+          properties: { name: 'Cinema' },
+          geometry: {
+            type: 'Point',
+            coordinates: [coord[1], coord[0]]
+          }
+        }))
+      };
+
+      map.addSource('cin', {
+        type: 'geojson',
+        data: geojson,
+        cluster: true,
+        clusterMaxZoom: 12,
+        clusterRadius: 50
+      });
+
+      addCluster('cin', '#A4A9FF', '/cin.png'); //color
+      } else {
+      try {
+        map.removeLayer('cin-cluster');
+        map.removeLayer('cin-cluster-count');
+        map.removeLayer('cin-point');
+        map.removeLayer('cin-point_background');
+        map.removeSource('cin');
+      } catch (error) {
+        //nothing
+      }
+    }
+
+    // Krankenanstalten
+    $: if ($showKra) {
+      const geojson = {
+        type: 'FeatureCollection',
+        features: kra_coords.map(coord => ({
+          type: 'Feature',
+          properties: { name: coord[2] }, //name coord[2]
+          geometry: {
+            type: 'Point',
+            coordinates: [coord[1], coord[0]]
+          }
+        }))
+      };
+
+      map.addSource('kra', {
+        type: 'geojson',
+        data: geojson,
+        cluster: true,
+        clusterMaxZoom: 12,
+        clusterRadius: 50
+      });
+
+      addCluster('kra', '#e5743c', '/kra.png');
+      } else {
+      try {
+        map.removeLayer('kra-cluster');
+        map.removeLayer('kra-cluster-count');
+        map.removeLayer('kra-point');
+        map.removeLayer('kra-point_background');
+        map.removeSource('kra');
+      } catch (error) {
+        //nothing
+      }
+    }
+
+    // Schulen
+    $: if ($showSch) {
+      const geojson = {
+        type: 'FeatureCollection',
+        features: sch_coords.map(coord => ({
+          type: 'Feature',
+          properties: { name: coord[2] },
+          geometry: {
+            type: 'Point',
+            coordinates: [coord[1], coord[0]]
+          }
+        }))
+      };
+
+      map.addSource('sch', {
+        type: 'geojson',
+        data: geojson,
+        cluster: true,
+        clusterMaxZoom: 12,
+        clusterRadius: 50
+      });
+
+      addCluster('sch', '#EF798A', '/sch.png');
+      } else {
+      try {
+        map.removeLayer('sch-cluster');
+        map.removeLayer('sch-cluster-count');
+        map.removeLayer('sch-point');
+        map.removeLayer('sch-point_background');
+        map.removeSource('sch');
+      } catch (error) {
+        //nothing
+      }
+    }
+
     // Function to add a clustered layer for a group of markers
     function addCluster(id, color, pathPic) {
       map.addLayer({
@@ -423,6 +534,54 @@
             'icon-image': 'bibIcon',
             }
           })
+        } else if (pathPic == '/cin.png') {
+        map.addImage('cinIcon', image);
+        map.addLayer({
+          id: id + '-point',
+          type: 'symbol',
+          source: id,
+          filter: ['!', ['has', 'point_count']],
+          layout: {
+            'icon-size': 0.043,
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
+            'icon-anchor': 'center',
+            'icon-optional': true,
+            'icon-image': 'cinIcon',
+            }
+          })
+        } else if (pathPic == '/kra.png') {
+        map.addImage('kraIcon', image);
+        map.addLayer({
+          id: id + '-point',
+          type: 'symbol',
+          source: id,
+          filter: ['!', ['has', 'point_count']],
+          layout: {
+            'icon-size': 0.045,
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
+            'icon-anchor': 'center',
+            'icon-optional': true,
+            'icon-image': 'kraIcon',
+            }
+          })
+        } else if (pathPic == '/sch.png') {
+        map.addImage('schIcon', image);
+        map.addLayer({
+          id: id + '-point',
+          type: 'symbol',
+          source: id,
+          filter: ['!', ['has', 'point_count']],
+          layout: {
+            'icon-size': 0.04,
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true,
+            'icon-anchor': 'center',
+            'icon-optional': true,
+            'icon-image': 'schIcon',
+            }
+          })
         } else if (pathPic == '/kin.png') {
         map.addImage('kinIcon', image);
         map.addLayer({
@@ -460,6 +619,18 @@
         case 'bib':
           iconSize = 0.043;
           iconOffset = [-120, 0];
+          break;
+        case 'cin':
+          iconSize = 0.033;
+          iconOffset = [-80, 0];
+          break;
+        case 'kra':
+          iconSize = 0.033;
+          iconOffset = [-80, 0];
+          break;
+        case 'sch':
+          iconSize = 0.03;
+          iconOffset = [-100, -40];
           break;
         case 'alt':
           iconSize = 0.03;

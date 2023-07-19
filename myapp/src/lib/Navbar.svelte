@@ -1,7 +1,7 @@
 <script>
     import App from "../App.svelte";
     import Api from "./Api.svelte";
-    import {isOpen, url_stored, marker, currentMinutes, currentTime, selectedOption, selectedOptionB, showAltenPflegeHeim, showKindergarten, showBib, showMus, showUnis} from '../stores.js'; 
+    import {isOpen, url_stored, marker, currentMinutes, currentTime, selectedOption, selectedOptionB, showAltenPflegeHeim, showKindergarten, showBib, showMus, showUnis, showKra, showCin, showSch} from '../stores.js'; 
     import { options } from "./options.js";
     import { _ } from 'svelte-i18n';
     import { locale } from '../i18n';
@@ -89,9 +89,14 @@
         <input class="public_check" type="checkbox" bind:checked={$showKindergarten}> {$_("kin_plu")} <span class="kindot"><img class="kin_png_icons" src="/kin.png" alt="kindergarten icon"></span>
         <input class="public_check" type="checkbox" bind:checked={$showUnis}> {$_("uni_plu")} <span class="unidot"><img class="uni_png_icons" src="/uni.png" alt="university icon"></span>
         <br id="element6">
+        <input class="public_check" type="checkbox" bind:checked={$showCin}> {$_("cin_plu")} <span class="cindot"><img class="cin_png_icons" src="/cin.png" alt="cinema icon"></span>
+        <input class="public_check" type="checkbox" bind:checked={$showKra}> {$_("kra_plu")} <span class="kradot"><img class="kra_png_icons" src="/kra.png" alt="hospital icon"></span>
+        <input class="public_check" type="checkbox" bind:checked={$showSch}> {$_("sch_plu")} <span class="schdot"><img class="sch_png_icons" src="/sch.png" alt="school icon"></span>
+        <br id="element6">
+        <div class="last_row_pp">
         <input class="public_check" type="checkbox" bind:checked={$showMus}> {$_("mus_plu")} <span class="musdot"><img class="mus_png_icons" src="/mus.png" alt="museum icon"></span>
         <input class="public_check" type="checkbox" bind:checked={$showBib}> {$_("bib_plu")} <span class="bibdot"><img class="bib_png_icons" src="/bib.png" alt="library icon"></span>
-      
+        </div>
     </div>
   </nav>
 </div>
@@ -102,6 +107,9 @@
 
 
 <style>
+  .last_row_pp {
+    margin-top: -10px;
+  }
 
   .alt_png_icons {
     width: 100%;
@@ -131,6 +139,30 @@
     position: relative;
     right: 3px;
     bottom: 3px;
+    object-fit: cover; /* This keeps the aspect ratio of the image while filling the element */
+  }
+  .cin_png_icons {
+    width: 60%;
+    height: 60%;
+    position: relative;
+    right: 0px;
+    bottom: -2px;
+    object-fit: cover; /* This keeps the aspect ratio of the image while filling the element */
+  }
+  .kra_png_icons {
+    width: 63%;
+    height: 63%;
+    position: relative;
+    right: 0px;
+    bottom: -3px;
+    object-fit: cover; /* This keeps the aspect ratio of the image while filling the element */
+  }
+  .sch_png_icons {
+    width: 64%;
+    height: 64%;
+    position: relative;
+    right: 0px;
+    bottom: -2px;
     object-fit: cover; /* This keeps the aspect ratio of the image while filling the element */
   }
 
@@ -230,6 +262,46 @@
     margin-right: 5px;
   }
 
+  .cindot {
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    top: -2px;
+    border-radius: 50%;
+    background-color: #A4A9FF;
+    margin-right: 5px;
+  }
+
+  .kradot {
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    top: -2px;
+    border-radius: 50%;
+    background-color: #e5743c;
+    margin-right: 5px;
+  }
+
+  .schdot {
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    top: -2px;
+    margin-top: 8px;
+    border-radius: 50%;
+    background-color: #EF798A;
+    margin-right: 5px;
+  }
+
   .public_check {
     position: sticky;
     display: flexbox;
@@ -247,7 +319,7 @@
     padding: 10px;
     padding-left: 5px;
     padding-right: 30px;
-    padding-bottom: 30px;
+    padding-bottom: 15px;
     border-radius: 30px;
     background-color: 
 rgb(233, 233, 34);
