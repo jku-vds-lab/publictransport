@@ -1175,6 +1175,7 @@
     .startsearchb {
       height: 70px;
       top: 45%;
+      box-shadow: -10px 4px 4px 4px rgba(0,0,0,.1);
       z-index: 100; 
       position: fixed;
       font-family: Inter, Avenir, Helvetica, Arial, sans-serif;

@@ -309,6 +309,7 @@
 
   .heading {
     position: absolute;
+    box-shadow: -10px 4px 4px 4px rgba(0,0,0,.1);
     left: 0px;
     top: 0px;
     width: 500px;
