@@ -51,5 +51,6 @@
   "p8_desc": "This button starts the search.",
   "p9_desc": "There is a map control up here to zoom and rotate the map",
   "p10_desc": "This button allows you to set the current station to the one closest to your location (website needs location access)",
-  "tutorial_start_button": "Tutorial"
+  "tutorial_start_button": "Tutorial",
+  "popup_curpos_text": "At these coordinates, these are the stations closest to this location:"
 }

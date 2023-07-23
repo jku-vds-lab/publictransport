@@ -101,10 +101,25 @@ async def find_nearest_station(lat: str, lon: str):
 def find_closest_station(lat,lon):
     lat = float(lat)
     lon = float(lon)  
+
+    # approximate conversion factor
+    conversion_factor = (111111 + 70000) / 2
+
     #euclidian distance
-    stops_data['distance'] = ((stops_data['stop_lat'] - lat) ** 2 + (stops_data['stop_lon'] - lon) ** 2) ** 0.5
-    closest_station = stops_data.loc[stops_data['distance'].idxmin(), 'stop_name']
-    return closest_station
+    stops_data['distance'] = (((stops_data['stop_lat'] - lat) ** 2 + (stops_data['stop_lon'] - lon) ** 2) ** 0.5) * conversion_factor
+
+    # sort data by distance and select top 5 closest stations
+    closest_stations = stops_data.sort_values('distance').head(5)
+
+    # create the result string
+    result_string = ""
+    for i in range(5):
+        result_string += f"{closest_stations.iloc[i]['stop_name']};{int(closest_stations.iloc[i]['distance'])} m;"
+    
+    # remove the last comma and space
+    result_string = result_string[:-1]
+    print(result_string)
+    return result_string
 
 def add_minutes(start_time, timelimit):
     early_timelimit = start_time

@@ -33,6 +33,7 @@
     let isGettingCoords = false
     let customeCoords
     let CurrentPosStation;
+    let markerCurPos;
 
     function getCoords() {
       isGettingCoords = true;
@@ -86,6 +87,10 @@
       currentTime.set(timeInput.value);
     }
 
+    function closePopup2() {
+      popupVisible2 = false;
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
     spinns = document.querySelector("#spin");
     spinnsB = document.querySelector("#spinB");
@@ -97,9 +102,13 @@
     let apicall = "waiting for apicall...";
     var marker_array = null
     let popupVisible = false;
+    let popupVisible2 = false;
+    let popup2List = [null, null, null,  null, null];
+    let popup2DistList = [null, null, null,  null, null];
     let legendVisible = false;
     let initialState = null;
     let nearStation = null;
+    let yourCoords_ = null;
 
 
     const check_first_popup = {};
@@ -160,15 +169,24 @@
       map.on('click', (e) => {
       if (isGettingCoords) {
         const { lng, lat } = e.lngLat;
+
+        // if a marker already exists, remove it
+        if (markerCurPos) {
+          markerCurPos.remove();
+        }
+        // add a new marker at the clicked location
+        markerCurPos = new Marker()
+          .setLngLat([lng, lat])
+          .addTo(map);
+
         initialState.lat = lat
         initialState.lng = lng
         isGettingCoords = false;
         map.getCanvas().style.cursor = '';
         startClosestStation().then(() => {
-          selectedOption.set(nearStation)
-          let yourCoords_ = get(_)("yourCoords")
-          let yourNextStation_ = get(_)("yourNextStation")
-          alert(`${yourCoords_} ${lng}, ${lat}. ${yourNextStation_} ${nearStation}`)
+          popupVisible2 = true
+          legendVisible = false
+          yourCoords_ = `${lng.toFixed(3)}, ${lat.toFixed(3)}`
           })
         }
       });
@@ -793,7 +811,18 @@
         fetch(request_url_start3 + "lat=" + String(initialState.lat) + "&lon=" + String(initialState.lng))
         .then(response => response.json())
         .then(data => {
-            nearStation = data.toString()
+            let rawData = data.toString()
+            nearStation = rawData.split(";")[0]
+            popup2List[0] = rawData.split(";")[0]
+            popup2List[1] = rawData.split(";")[2]
+            popup2List[2] = rawData.split(";")[4]
+            popup2List[3] = rawData.split(";")[6]
+            popup2List[4] = rawData.split(";")[8]
+            popup2DistList[0] = rawData.split(";")[1]
+            popup2DistList[1] = rawData.split(";")[3]
+            popup2DistList[2] = rawData.split(";")[5]
+            popup2DistList[3] = rawData.split(";")[7]
+            popup2DistList[4] = rawData.split(";")[9]
             resolve();
             }).catch(error => {
                 console.log(error);
@@ -954,6 +983,19 @@
         <button on:click={() => window.open('https://forms.office.com/e/Gvf0iveeWc', '_blank')} class="popup-button secondary">{$_("link_quiz")}</button>
       </div>
     </div>
+  {/if}
+
+  {#if popupVisible2}
+      <div class="popup2">
+        <h2>{yourCoords_}</h2>
+        <p>{$_("popup_curpos_text")}</p>
+        <button on:click={() => {selectedOption.set(popup2List[0]);closePopup2();markerCurPos.remove()}} class="popup-button secondary">{popup2List[0] +" ("+ popup2DistList[0]+")"}</button>
+        <button on:click={() => {selectedOption.set(popup2List[1]);closePopup2();markerCurPos.remove()}} class="popup-button secondary">{popup2List[1] +" ("+ popup2DistList[1]+")"}</button>
+        <button on:click={() => {selectedOption.set(popup2List[2]);closePopup2();markerCurPos.remove()}} class="popup-button secondary">{popup2List[2] +" ("+ popup2DistList[2]+")"}</button>
+        <button on:click={() => {selectedOption.set(popup2List[3]);closePopup2();markerCurPos.remove()}} class="popup-button secondary">{popup2List[3] +" ("+ popup2DistList[3]+")"}</button>
+        <button on:click={() => {selectedOption.set(popup2List[4]);closePopup2();markerCurPos.remove()}} class="popup-button secondary">{popup2List[4] +" ("+ popup2DistList[4]+")"}</button>
+        <button class="close-button" on:click={() => {closePopup2();markerCurPos.remove()}}>X</button>
+      </div>
   {/if}
 
   <div class="map-wrap">
@@ -1319,6 +1361,55 @@
     .spinnerB .bounce2 {
       -webkit-animation-delay: -0.16s;
       animation-delay: -0.16s;
+    }
+
+    .popup2 {
+      position: fixed;
+      right: 50px;
+      top: 20px;
+      background-color: white;
+      padding: 20px;
+      z-index: 999 !important;
+      border-radius: 10px;
+      width: 200px;
+      text-align: center;
+    }
+
+    .popup2 h2 {
+      margin-top: 0;
+    }
+
+    .popup2 button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      display: block;
+      margin-top: 5px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .popup2 button:hover {
+      background-color: #3e8e41;
+      color: white;
+    }
+
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 0px 0px !important;
+      width: 15px !important;
+      height: 15px !important;
+      background-color: rgba(245, 5, 5, 0.735) !important;
+      margin-top: 0px !important;
+      border: none !important;
+      border-radius: 50% !important;
+      cursor: pointer;
     }
 
     .popup-overlay {

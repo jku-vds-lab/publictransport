@@ -51,5 +51,6 @@
   "p8_desc": "Dieser Knopf startet die Suche.",
   "p9_desc": "Hier oben befindet sich eine Mapsteuerung um zu zoomen und um die Map zu drehen",
   "p10_desc": "Mit dieser Schaltfläche können Sie die aktuelle Station auf diejenige einstellen, die Ihrem Standort am nächsten liegt (Website benötigt Standortzugriff)",
-  "tutorial_start_button": "Einführung"
+  "tutorial_start_button": "Einführung",
+  "popup_curpos_text": "An diesen Koordinaten sind dies die Stationen, die dieser Position am nächsten liegen:"
 }
