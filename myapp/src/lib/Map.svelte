@@ -32,10 +32,15 @@
 
     let isGettingCoords = false
     let customeCoords
+    let CurrentPosStation;
 
     function getCoords() {
       isGettingCoords = true;
       map.getCanvas().style.cursor = 'crosshair';
+    }
+
+    function getCurrent() {
+      selectedOption.set(CurrentPosStation);
     }
 
     function changeLanguage(lang) {
@@ -61,6 +66,7 @@
     function closePopup() {
       popupVisible = false;
       selectedOption.set(nearStation);
+      CurrentPosStation = nearStation;
       const minutesInput = document.getElementById("minutesInput");
       const timeInput = document.getElementById("timeInput");
       
@@ -702,8 +708,10 @@
       const tip = document.createElement('span');
       if (ctx == "legend_desc") {
         tip.className = 'tooltip2';
-      } else {
+      } else if (ctx == "tooltip_select_custom_place") {
         tip.className = 'tooltip';
+      } else {
+        tip.className = 'tooltip3';
       }
       tip.textContent = $_(ctx);
       node.appendChild(tip);
@@ -875,7 +883,7 @@
           return [];
         })
         //###### B
-        if (!$selectedOptionB == null) {
+        if (!($selectedOptionB==null)) {
           await startActionB() 
           marker_b.remove();
           if (map.getLayer('polygonsB')) map.removeLayer('polygonsB');
@@ -968,8 +976,13 @@
       src="https://api.maptiler.com/resources/logo.svg" alt="MapTiler logo"/></a>
     <div class="map" id="map" bind:this={mapContainer}></div>
   </div>
+
   <div class="GetCoordsButtonDiv" id="element7" class:open="{!$isOpen}">
     <button on:click={getCoords} class="GetCoordsButton" use:tooltip={"tooltip_select_custom_place"}>.</button>
+  </div>
+
+  <div class="CurrentPosButtonDiv" id="element10" class:open="{!$isOpen}">
+    <button on:click={getCurrent} class="CurrentPosButton" use:tooltip={"tooltip_current_pos_button"}>.</button>
   </div>
 
   {#if legendVisible}
@@ -1054,6 +1067,21 @@
       box-shadow: 0 0 0 2px rgba(0,0,0,.1);
     }
 
+    :global(.tooltip3) {
+      visibility: hidden;
+      background-color: rgba(255, 255, 255, 0.8);
+      color: black;
+      border-radius: 10px;
+      text-align: center;
+      padding: 7px;
+      position: absolute;
+      width: 100px;
+      z-index: 1;
+      top: 50%;
+      left: 260%;
+      transform: translate(-50%, -50%);
+    }
+
     :global(.tooltip2) {
       visibility: hidden;
       background-color: rgba(255, 255, 255, 0.8);
@@ -1080,14 +1108,43 @@
       width: 100px;
       z-index: 1;
       top: 50%;
-      left: 260%;
+      left: 340%;
       transform: translate(-50%, -50%);
+    }
+
+    .CurrentPosButton {
+      color: transparent;
+      background-color: transparent;
+      background-image: url('../crosshairs-solid.svg');
+      background-position: center;
+      background-repeat: no-repeat;
+      border: none;
+      outline: none;
+      z-index: 120;
+      height: 25px;
+      background-size: 65%;
+    }
+
+    .CurrentPosButton:active {
+      background-size: 55%;
+    }
+
+    .CurrentPosButtonDiv {
+      position: fixed;
+      z-index: 120;
+      top: 90px;
+      left: 445px;
+      transition: left 0.35s ease-in-out;
+    }
+
+    .CurrentPosButtonDiv.open {
+      left: -65px;
     }
 
     .GetCoordsButton {
       color: transparent;
       background-color: transparent;
-      background-image: url('../crosshairs-solid.svg');
+      background-image: url('../map-pin.svg');
       background-position: center;
       background-repeat: no-repeat;
       border: none;
@@ -1182,7 +1239,7 @@
       font-size: 12px;
       line-height: 18px;
       left: 0;
-      top: 50%;
+      top: 365px;
       width: 200px;
       margin : 10px;
       margin-left: -30px;

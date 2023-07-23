@@ -37,6 +37,7 @@
   "min_input_desc": "Minuten: ",
   "time_input_desc": "Startzeit: ",
   "tooltip_select_custom_place": "Wähle einen beliebigen Standort auf der Karte und erhalte die nächstgelegene Haltestelle",
+  "tooltip_current_pos_button": "Setzt die Starthaltestelle auf die, die Ihrem aktuellen Standort am nächsten liegt (Website benötigt Standortzugriff)",    
   "legend_desc": "Der Radius des Kreises gibt an, wie viel Zeit Ihnen noch zu Fuß bleibt, nachdem Sie die Station erreicht haben. Die maximale Gehzeit ist auf 15 Minuten begrenzt.",
   "legend_header": "Übrige Zeit",
   "tutorial_confirm": "Verstanden",
@@ -49,5 +50,6 @@
   "p7_desc": "Mit einem Klick auf dieses Icon können Sie einen beliebigen Standort auf der Karte auswählen und Ihnen wird dann die nächstgelegene Haltestelle vorgeschlagen.",
   "p8_desc": "Dieser Knopf startet die Suche.",
   "p9_desc": "Hier oben befindet sich eine Mapsteuerung um zu zoomen und um die Map zu drehen",
+  "p10_desc": "Mit dieser Schaltfläche können Sie die aktuelle Station auf diejenige einstellen, die Ihrem Standort am nächsten liegt (Website benötigt Standortzugriff)",
   "tutorial_start_button": "Einführung"
 }

@@ -15,6 +15,7 @@
     {id: 5, elementId: 'element2', left: 100, up: -100, rad: 80},
     {id: 6, elementId: 'element6', left: 200, up: -20, rad: 140},
     {id: 7, elementId: 'element7', left: 0, up: 0, rad: 40},
+    {id: 10, elementId: 'element10', left: 0, up: 0, rad: 40},
     {id: 8, elementId: 'element8', left: 0, up: 0, rad: 100},
     {id: 9, elementId: 'element9', left: 0, up: 0, rad: 60},
     // add more places as needed
