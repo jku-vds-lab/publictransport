@@ -1115,7 +1115,7 @@
     .CurrentPosButton {
       color: transparent;
       background-color: transparent;
-      background-image: url('../crosshairs-solid.svg');
+      background-image: url('../crosshair.svg');
       background-position: center;
       background-repeat: no-repeat;
       border: none;
