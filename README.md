@@ -1,4 +1,4 @@
-# publictransport test push
+# publictransport
 
 ### Interactive webapp that shows you how far public transport can get you in a particular amount of time?
 
@@ -22,9 +22,10 @@ source .venv/bin/activate
 
 # Windows (cmd)
 .\.venv\Scripts\activate
+(env\Scripts\activate.bat)
 ```
 
-install dependencies (TODO: create requirements file)
+install dependencies
 
 ```
 pip install uvicorn
