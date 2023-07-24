@@ -1037,13 +1037,13 @@
         <p>{$_("popup_curpos_text")}</p>
         {#each popup2List as item, i}
           <button 
-            on:mouseover={() => addMarker(popup2CoordsList[i][0], popup2CoordsList[i][1])} 
-            on:focus={() => addMarker(popup2CoordsList[i][0], popup2CoordsList[i][1])} 
+            on:mouseover={() => addMarker(popup2CoordsList[i].split(",")[0], popup2CoordsList[i].split(",")[1])} 
+            on:focus={() => addMarker(popup2CoordsList[i].split(",")[0], popup2CoordsList[i].split(",")[1])} 
             on:mouseout={() => {if (hoverMarker) hoverMarker.remove();}} 
             on:blur={() => {if (hoverMarker) hoverMarker.remove();}} 
             on:click={() => {selectedOption.set(item);closePopup2();markerCurPos.remove()}} 
             class="popup-button secondary">
-            {item +" ("+ popup2DistList[i]+")"+popup2CoordsList[i]}
+            {item +" ("+ popup2DistList[i]+")"}
           </button>
         {/each}
         <button class="close-button" on:click={() => {closePopup2();markerCurPos.remove()}}>X</button>
@@ -1052,7 +1052,7 @@
 
   {#if popupVisible3}
     <div class="popup-overlay">
-      <div class="popup">
+      <div class="popup3">
         <h2>{$_("popup3_head")}</h2>
         <p>{pop3Message}</p>
         <button on:click={() => {
@@ -1430,6 +1430,37 @@
     .spinnerB .bounce2 {
       -webkit-animation-delay: -0.16s;
       animation-delay: -0.16s;
+    }
+
+    .popup3 {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 250px;
+      text-align: center;
+    }
+
+    .popup3 h2 {
+      margin-top: 0;
+    }
+
+    .popup3 button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      display: block;
+      margin-top: 5px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .popup3 button:hover {
+      background-color: #3e8e41;
+      color: white;
     }
 
     .popup2 {
