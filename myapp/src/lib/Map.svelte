@@ -29,6 +29,7 @@
     let request_url_start = BASE_URL + "feed?"
     let request_url_start2 = BASE_URL + "marker?"
     let request_url_start3 = BASE_URL + "nearest_station?"
+    let noConfirm = false
 
     let isGettingCoords = false
     let customeCoords
@@ -91,6 +92,39 @@
       popupVisible2 = false;
     }
 
+    let pop3Selection = null;
+    let resolvePop3Selection;
+    let pop3Message;
+
+    function closePopup3() {
+      popupVisible3 = false;
+    }
+
+    // Diese Funktion wird aufgerufen, wenn der Benutzer eine Auswahl trifft.
+    function selectPop3(value) {
+      pop3Selection = value;
+      if (resolvePop3Selection) {
+        resolvePop3Selection(pop3Selection); // Resolve the promise with the value
+        resolvePop3Selection = null; // Reset for future use
+      }
+      pop3Selection = null; // Clear the selection value
+    }
+
+    // Diese Funktion gibt ein Promise zurück, das sich auflöst, sobald der Benutzer eine Auswahl trifft.
+    function waitForPop3Selection() {
+      return new Promise(resolve => {
+        // If a selection has already been made, resolve immediately
+        if (pop3Selection !== null) {
+          const result = pop3Selection;
+          pop3Selection = null; // Clear the selection value
+          resolve(result); // Resolve with the value
+        } else {
+          // Otherwise, store the resolve function to be called later
+          resolvePop3Selection = resolve;
+        }
+      });
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
     spinns = document.querySelector("#spin");
     spinnsB = document.querySelector("#spinB");
@@ -103,6 +137,7 @@
     var marker_array = null
     let popupVisible = false;
     let popupVisible2 = false;
+    let popupVisible3 = false;
     let popup2List = [null, null, null,  null, null];
     let popup2DistList = [null, null, null,  null, null];
     let popup2CoordsList = [null, null, null,  null, null];
@@ -786,8 +821,9 @@
     const startAction = () => {
       return new Promise((resolve, reject) => {
         let force_setting = "&forced=forced" //secondDropdown Enabled
-        if ($selectedOptionB == null) { //secondDropdown Disabled
-          force_setting = "&forced=not_forced"
+        if ($selectedOptionB == null && !noConfirm) { //secondDropdown Disabled change!!!!!
+          force_setting = "&forced=not_forced";
+          noConfirm = false;
         }
         url = request_url_start + "starting_station=" + String($selectedOption) + "&starting_time=" + String($currentTime).substring(0, 5) + ':00' + "&timelimit=" + String($currentMinutes) + force_setting;
         url2 = request_url_start2 + "station_name=" + String($selectedOption);
@@ -825,7 +861,7 @@
         fetch(request_url_start3 + "lat=" + String(initialState.lat) + "&lon=" + String(initialState.lng))
         .then(response => response.json())
         .then(data => {
-          let rawData = data.toString()
+            let rawData = data.toString()
             nearStation = rawData.split(";")[0]
             popup2List[0] = rawData.split(";")[0]
             popup2List[1] = rawData.split(";")[3]
@@ -854,6 +890,7 @@
         showSpinner()
         showSpinnerB()
         await startAction()
+        noConfirm = false;
         marker_a.remove();
         legendVisible = true;
         if (map.getLayer('polygons')) map.removeLayer('polygons');
@@ -863,43 +900,32 @@
         let popup = new Popup({ offset: 25 }).setText($selectedOption);
         marker_a.setPopup(popup);
 
-        console.log(url)
         fetch(url)
         .then(response => response.json())
-        .then(data => {
+        .then(async data => {
           if (typeof data === "string" && data.startsWith("!!!")) {
             hideSpinner()
+            popupVisible3 = true;
             const textInsert = data.slice(3);
-            const message = $_("popup2_prefix") + textInsert + $_("popup2_suffix");
-            const confirmed = window.confirm(message);
-            if (confirmed) {
+            pop3Message = $_("popup2_prefix") + textInsert + $_("popup2_suffix");
+
+            // Get the user's selection.
+            const pop3Selection = await waitForPop3Selection();
+            
+            // Fortsetzen der Funktion nachdem eine Auswahl getroffen wurde.
+            console.log('User selection is', pop3Selection);
+
+            if (pop3Selection) {
+              console.log("confirmed pop3 tree")
               const timeInput = document.getElementById("timeInput");
               timeInput.value = data.slice(3);
               currentTime.set(timeInput.value);
-              startA();
+              await startA();
               return
             } else {
-              apicall = (data);
-              if (map.getLayer('polygons')) map.removeLayer('polygons');
-              if (map.getSource('map_source')) map.removeSource('map_source');
-              const parsedGeoJson = JSON.parse(apicall);
-              map.addSource('map_source', {
-              type: 'geojson',
-              data: new Object(parsedGeoJson)
-              }
-              )
-              map.addLayer({
-                'id': 'polygons',
-                'type': 'fill',
-                'source': 'map_source',
-                'layout': {},
-                'paint': { 
-                    'fill-color': '#ff8200',
-                    'fill-opacity': 0.4
-                }
-              })
-              hideSpinner()
-              map.setCenter([marker_array[1],marker_array[0]]); 
+              console.log("denied pop3 tree")
+              noConfirm = true;
+              await startA();
             }
           }
           apicall = (data)
@@ -932,6 +958,7 @@
         })
         //###### B
         if (!($selectedOptionB==null)) {
+          console.log("B triggered")
           await startActionB() 
           marker_b.remove();
           if (map.getLayer('polygonsB')) map.removeLayer('polygonsB');
@@ -1021,6 +1048,23 @@
         {/each}
         <button class="close-button" on:click={() => {closePopup2();markerCurPos.remove()}}>X</button>
       </div>
+  {/if}
+
+  {#if popupVisible3}
+    <div class="popup-overlay">
+      <div class="popup">
+        <h2>{$_("popup3_head")}</h2>
+        <p>{pop3Message}</p>
+        <button on:click={() => {
+          closePopup3();
+          selectPop3(true);
+        }}>{$_("popup3_conf")}</button>
+        <button on:click={() => {
+          closePopup3();
+          selectPop3(false);
+        }} class="popup-button secondary">{$_("popup3_denie")}</button>
+      </div>
+    </div>
   {/if}
 
   <div class="map-wrap">

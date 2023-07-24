@@ -100,7 +100,7 @@ async def find_nearest_station(lat: str, lon: str):
 ###### Python Functions #############################################
 def find_closest_station(lat, lon):
     lat = float(lat)
-    lon = float(lon)  
+    lon = float(lon)
 
     # approximate conversion factor
     conversion_factor = (111111 + 70000) / 2
