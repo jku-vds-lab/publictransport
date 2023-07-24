@@ -98,7 +98,7 @@ async def find_nearest_station(lat: str, lon: str):
     return find_closest_station(lat,lon)
 
 ###### Python Functions #############################################
-def find_closest_station(lat,lon):
+def find_closest_station(lat, lon):
     lat = float(lat)
     lon = float(lon)  
 
@@ -114,11 +114,12 @@ def find_closest_station(lat,lon):
     # create the result string
     result_string = ""
     for i in range(5):
-        result_string += f"{closest_stations.iloc[i]['stop_name']};{int(closest_stations.iloc[i]['distance'])} m;"
+        station_lat = closest_stations.iloc[i]['stop_lat']
+        station_lon = closest_stations.iloc[i]['stop_lon']
+        result_string += f"{closest_stations.iloc[i]['stop_name']};{int(closest_stations.iloc[i]['distance'])} m;{station_lat},{station_lon};"
     
-    # remove the last comma and space
+    # remove the last semicolon
     result_string = result_string[:-1]
-    print(result_string)
     return result_string
 
 def add_minutes(start_time, timelimit):

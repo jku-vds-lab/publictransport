@@ -105,10 +105,12 @@
     let popupVisible2 = false;
     let popup2List = [null, null, null,  null, null];
     let popup2DistList = [null, null, null,  null, null];
+    let popup2CoordsList = [null, null, null,  null, null];
     let legendVisible = false;
     let initialState = null;
     let nearStation = null;
     let yourCoords_ = null;
+    let hoverMarker = null;
 
 
     const check_first_popup = {};
@@ -195,6 +197,18 @@
     onDestroy(() => {
       map.remove();
     });
+
+    //marker if hover over a button
+    function addMarker(lat, lon) {
+      // Remove any existing marker
+      if (hoverMarker) {
+          hoverMarker.remove();
+      }
+      // Add new marker
+      hoverMarker = new Marker({color: "#4CAF50"})
+          .setLngLat([parseFloat(lon), parseFloat(lat)])
+          .addTo(map);
+    }
 
     //Altenheim
     $: if ($showAltenPflegeHeim) {
@@ -811,18 +825,23 @@
         fetch(request_url_start3 + "lat=" + String(initialState.lat) + "&lon=" + String(initialState.lng))
         .then(response => response.json())
         .then(data => {
-            let rawData = data.toString()
+          let rawData = data.toString()
             nearStation = rawData.split(";")[0]
             popup2List[0] = rawData.split(";")[0]
-            popup2List[1] = rawData.split(";")[2]
-            popup2List[2] = rawData.split(";")[4]
-            popup2List[3] = rawData.split(";")[6]
-            popup2List[4] = rawData.split(";")[8]
+            popup2List[1] = rawData.split(";")[3]
+            popup2List[2] = rawData.split(";")[6]
+            popup2List[3] = rawData.split(";")[9]
+            popup2List[4] = rawData.split(";")[12]
             popup2DistList[0] = rawData.split(";")[1]
-            popup2DistList[1] = rawData.split(";")[3]
-            popup2DistList[2] = rawData.split(";")[5]
-            popup2DistList[3] = rawData.split(";")[7]
-            popup2DistList[4] = rawData.split(";")[9]
+            popup2DistList[1] = rawData.split(";")[4]
+            popup2DistList[2] = rawData.split(";")[7]
+            popup2DistList[3] = rawData.split(";")[10]
+            popup2DistList[4] = rawData.split(";")[13]
+            popup2CoordsList[0] = rawData.split(";")[2]
+            popup2CoordsList[1] = rawData.split(";")[5]
+            popup2CoordsList[2] = rawData.split(";")[8]
+            popup2CoordsList[3] = rawData.split(";")[11]
+            popup2CoordsList[4] = rawData.split(";")[14]
             resolve();
             }).catch(error => {
                 console.log(error);
@@ -989,11 +1008,17 @@
       <div class="popup2">
         <h2>{yourCoords_}</h2>
         <p>{$_("popup_curpos_text")}</p>
-        <button on:click={() => {selectedOption.set(popup2List[0]);closePopup2();markerCurPos.remove()}} class="popup-button secondary">{popup2List[0] +" ("+ popup2DistList[0]+")"}</button>
-        <button on:click={() => {selectedOption.set(popup2List[1]);closePopup2();markerCurPos.remove()}} class="popup-button secondary">{popup2List[1] +" ("+ popup2DistList[1]+")"}</button>
-        <button on:click={() => {selectedOption.set(popup2List[2]);closePopup2();markerCurPos.remove()}} class="popup-button secondary">{popup2List[2] +" ("+ popup2DistList[2]+")"}</button>
-        <button on:click={() => {selectedOption.set(popup2List[3]);closePopup2();markerCurPos.remove()}} class="popup-button secondary">{popup2List[3] +" ("+ popup2DistList[3]+")"}</button>
-        <button on:click={() => {selectedOption.set(popup2List[4]);closePopup2();markerCurPos.remove()}} class="popup-button secondary">{popup2List[4] +" ("+ popup2DistList[4]+")"}</button>
+        {#each popup2List as item, i}
+          <button 
+            on:mouseover={() => addMarker(popup2CoordsList[i][0], popup2CoordsList[i][1])} 
+            on:focus={() => addMarker(popup2CoordsList[i][0], popup2CoordsList[i][1])} 
+            on:mouseout={() => {if (hoverMarker) hoverMarker.remove();}} 
+            on:blur={() => {if (hoverMarker) hoverMarker.remove();}} 
+            on:click={() => {selectedOption.set(item);closePopup2();markerCurPos.remove()}} 
+            class="popup-button secondary">
+            {item +" ("+ popup2DistList[i]+")"+popup2CoordsList[i]}
+          </button>
+        {/each}
         <button class="close-button" on:click={() => {closePopup2();markerCurPos.remove()}}>X</button>
       </div>
   {/if}
