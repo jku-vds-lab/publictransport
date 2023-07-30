@@ -1,8 +1,9 @@
+from fastapi.staticfiles import StaticFiles
 from fastapi import FastAPI, Form, Response
 from pydantic import BaseModel
+from starlette.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
-import time
 
 import numpy as np 
 import pandas as pd
@@ -96,7 +97,6 @@ stored_shapes = []
 @app.get("/feed")
 async def load_feed(starting_station: str,starting_time: str,timelimit: str,forced: str): 
     async def event_stream(starting_station: str,starting_time: str,timelimit: str,forced: str):
-        measure_time_start_all = time.time()
         start_station = get_id_of_stop(starting_station)
         global stored_shapes
         stored_shapes = []
@@ -116,9 +116,6 @@ async def load_feed(starting_station: str,starting_time: str,timelimit: str,forc
             #print("last check size",len(check_size))
             yield check_size
                 #time measure
-
-        measure_time_end_all = time.time() 
-        print(f"The complete Execution {measure_time_end_all - measure_time_start_all} seconds to execute")
 
     return StreamingResponse(event_stream(starting_station, starting_time, timelimit, forced))
 
@@ -240,7 +237,6 @@ def solution_geojson(solution_array, starting_station):
     return FeatureCollection(geo_list)
 
 def find_all_in_walking_distance(valid_stops, end_time):
-    measure_time_start = time.time() 
 
     # Add coords to valid_stops
     valid_stops = valid_stops.merge(stops[['stop_id', 'stop_lat', 'stop_lon', 'stop_name']], on='stop_id')
@@ -306,16 +302,11 @@ def find_all_in_walking_distance(valid_stops, end_time):
         # Remove duplicates from reachable_stops_info according to the stop_id and keep the one that has the earlier arrival time
         reachable_stops_info = reachable_stops_info.sort_values('arrival_time').drop_duplicates('stop_id', keep='first')
         
-        #time measure
-        measure_time_end = time.time() 
-        print(f"The function find all in wlking distance took {measure_time_end - measure_time_start} seconds to execute")
-        
         return reachable_stops_info
     else: 
         return "nothing found"
     
 def reachable_stations(start_station, start_time, travel_time, forced):
-    measure_time_start = time.time()
 
     start_time = pd.to_timedelta(start_time)
     travel_time = pd.to_timedelta(str(travel_time) + ' minutes')
@@ -384,9 +375,6 @@ def reachable_stations(start_station, start_time, travel_time, forced):
             reachable_stations[amount_changes].append(row.tolist())
     
     #yield reachable_stations First time
-    measure_time_end = time.time() 
-    print(f"The find station function took {measure_time_end - measure_time_start} seconds to execute")
-    measure_time_start = time.time() 
     yield reachable_stations[amount_changes], end_time
     
     used_trips = set(trip_start_sequence.keys())
@@ -448,8 +436,6 @@ def reachable_stations(start_station, start_time, travel_time, forced):
         reachable_stations.append(next_reachable_stations.values.tolist())
 
         #yield next_reachable_stations For every loop 
-        measure_time_end = time.time() 
-        print(f"The find station function took {measure_time_end - measure_time_start} seconds to execute")
         yield reachable_stations[amount_changes], end_time
 
-
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
