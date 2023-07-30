@@ -396,9 +396,5 @@ rgb(24, 10, 10);
     color: rgb(188, 187, 187);
   }
 
-  .checkBox {
-    display: block;
-  }
-
   
 </style>

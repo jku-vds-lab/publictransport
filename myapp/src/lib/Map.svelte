@@ -1221,14 +1221,6 @@
   </div>
 
   <style>
-    .ObenChef{
-      z-index: 9999;
-      position: absolute;
-      right: 600px;
-      top: 400px;
-      display: flexbox;
-    }
-
     .top_right_dot{
       position: absolute;
       top: 46px;
