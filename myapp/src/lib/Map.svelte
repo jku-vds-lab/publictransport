@@ -1114,603 +1114,603 @@
             if (map.getSource(sourceName)) map.removeSource(sourceName);
           }
         }
-      </script>
+</script>
 
-      {#if $showTutorial}
-        <Tutorial />
-      {/if}  
+  {#if $showTutorial}
+    <Tutorial />
+  {/if}  
 
-      <div id = "element9" class = "top_right_dot">
-        .X
+  <div id = "element9" class = "top_right_dot">
+    .X
+  </div>
+
+  {#if popupVisible}
+    <div class="popup-overlay">
+      <div class="popup">
+        <h2>{$_("popup_head")}</h2>
+        <p>{$_("popup_text")}</p>
+        <button on:click={closePopup}>{$_("popup_button")}</button>
+        <button on:click={() => {
+          $showTutorial = true; 
+          closePopup();
+        }}>{$_("tutorial_start_button")}</button>
+        <button on:click={() => window.open('https://forms.office.com/e/Gvf0iveeWc', '_blank')} class="popup-button secondary">{$_("link_quiz")}</button>
       </div>
-      
-      {#if popupVisible}
-        <div class="popup-overlay">
-          <div class="popup">
-            <h2>{$_("popup_head")}</h2>
-            <p>{$_("popup_text")}</p>
-            <button on:click={closePopup}>{$_("popup_button")}</button>
-            <button on:click={() => {
-              $showTutorial = true; 
-              closePopup();
-            }}>{$_("tutorial_start_button")}</button>
-            <button on:click={() => window.open('https://forms.office.com/e/Gvf0iveeWc', '_blank')} class="popup-button secondary">{$_("link_quiz")}</button>
-          </div>
-        </div>
-      {/if}
+    </div>
+  {/if}
 
-      {#if popupVisible2}
-          <div class="popup2">
-            <h2>{yourCoords_}</h2>
-            <p>{$_("popup_curpos_text")}</p>
-            {#each popup2List as item, i}
-              <button 
-                on:mouseover={() => addMarker(popup2CoordsList[i].split(",")[0], popup2CoordsList[i].split(",")[1])} 
-                on:focus={() => addMarker(popup2CoordsList[i].split(",")[0], popup2CoordsList[i].split(",")[1])} 
-                on:mouseout={() => {if (hoverMarker) hoverMarker.remove();}} 
-                on:blur={() => {if (hoverMarker) hoverMarker.remove();}} 
-                on:click={() => {selectedOption.set(item);closePopup2();markerCurPos.remove()}} 
-                class="popup-button secondary">
-                {item +" ("+ popup2DistList[i]+")"}
-              </button>
-            {/each}
-            <button class="close-button" on:click={() => {closePopup2();markerCurPos.remove()}}>X</button>
-          </div>
-      {/if}
-
-      {#if popupVisible3}
-        <div class="popup-overlay">
-          <div class="popup3">
-            <h2>{$_("popup3_head")}</h2>
-            <p>{pop3Message}</p>
-            <button on:click={() => {
-              closePopup3();
-              selectPop3(true);
-            }}>{$_("popup3_conf")}</button>
-            <button on:click={() => {
-              closePopup3();
-              selectPop3(false);
-            }} class="popup-button secondary">{$_("popup3_denie")}</button>
-          </div>
-        </div>
-      {/if}
-
-      <div class="map-wrap">
-        <div>
-          <button class= "startsearchb" id="element8" on:click={startA}><h4>{$_("start_search")}</h4></button>
-        </div>
-        <div class="spinner" id="spin" style="display: none;">
-          <h4>Loading ...</h4>
-          <div class="bounce1"></div>
-          <div class="bounce2"></div>
-          <div class="bounce3"></div>
-        </div>
-        <div class="spinnerB" id="spinB" style="display: none;">
-          <h4>Loading ...</h4>
-          <div class="bounce1"></div>
-          <div class="bounce2"></div>
-          <div class="bounce3"></div>
-        </div>
-        <a href="https://www.maptiler.com" class="watermark"><img
-          src="https://api.maptiler.com/resources/logo.svg" alt="MapTiler logo"/></a>
-        <div class="map" id="map" bind:this={mapContainer}></div>
+  {#if popupVisible2}
+      <div class="popup2">
+        <h2>{yourCoords_}</h2>
+        <p>{$_("popup_curpos_text")}</p>
+        {#each popup2List as item, i}
+          <button 
+            on:mouseover={() => addMarker(popup2CoordsList[i].split(",")[0], popup2CoordsList[i].split(",")[1])} 
+            on:focus={() => addMarker(popup2CoordsList[i].split(",")[0], popup2CoordsList[i].split(",")[1])} 
+            on:mouseout={() => {if (hoverMarker) hoverMarker.remove();}} 
+            on:blur={() => {if (hoverMarker) hoverMarker.remove();}} 
+            on:click={() => {selectedOption.set(item);closePopup2();markerCurPos.remove()}} 
+            class="popup-button secondary">
+            {item +" ("+ popup2DistList[i]+")"}
+          </button>
+        {/each}
+        <button class="close-button" on:click={() => {closePopup2();markerCurPos.remove()}}>X</button>
       </div>
+  {/if}
 
-      <div class="GetCoordsButtonDiv" id="element7" class:open="{!$isOpen}">
-        <button on:click={getCoords} class="GetCoordsButton" use:tooltip={"tooltip_select_custom_place"}>.</button>
+  {#if popupVisible3}
+    <div class="popup-overlay">
+      <div class="popup3">
+        <h2>{$_("popup3_head")}</h2>
+        <p>{pop3Message}</p>
+        <button on:click={() => {
+          closePopup3();
+          selectPop3(true);
+        }}>{$_("popup3_conf")}</button>
+        <button on:click={() => {
+          closePopup3();
+          selectPop3(false);
+        }} class="popup-button secondary">{$_("popup3_denie")}</button>
       </div>
+    </div>
+  {/if}
 
-      <div class="CurrentPosButtonDiv" id="element10" class:open="{!$isOpen}">
-        <button on:click={getCurrent} class="CurrentPosButton" use:tooltip={"tooltip_current_pos_button"}>.</button>
+  <div class="map-wrap">
+    <div>
+      <button class= "startsearchb" id="element8" on:click={startA}><h4>{$_("start_search")}</h4></button>
+    </div>
+    <div class="spinner" id="spin" style="display: none;">
+      <h4>Loading ...</h4>
+      <div class="bounce1"></div>
+      <div class="bounce2"></div>
+      <div class="bounce3"></div>
+    </div>
+    <div class="spinnerB" id="spinB" style="display: none;">
+      <h4>Loading ...</h4>
+      <div class="bounce1"></div>
+      <div class="bounce2"></div>
+      <div class="bounce3"></div>
+    </div>
+    <a href="https://www.maptiler.com" class="watermark"><img
+      src="https://api.maptiler.com/resources/logo.svg" alt="MapTiler logo"/></a>
+    <div class="map" id="map" bind:this={mapContainer}></div>
+  </div>
+
+  <div class="GetCoordsButtonDiv" id="element7" class:open="{!$isOpen}">
+    <button on:click={getCoords} class="GetCoordsButton" use:tooltip={"tooltip_select_custom_place"}>.</button>
+  </div>
+
+  <div class="CurrentPosButtonDiv" id="element10" class:open="{!$isOpen}">
+    <button on:click={getCurrent} class="CurrentPosButton" use:tooltip={"tooltip_current_pos_button"}>.</button>
+  </div>
+
+  {#if legendVisible}
+    <div class="legend_field_div" use:tooltip={"legend_desc"}>
+      <div class="legend_header">
+        {$_("legend_header")} <br>
       </div>
+      <span class="legend_dot1"></span> 3 Min<br>
+      <span class="legend_dot2"></span> 10 Min<br>
+      <span class="legend_dot3"></span> 15 Min
+    </div>
+  {/if}
 
-      {#if legendVisible}
-        <div class="legend_field_div" use:tooltip={"legend_desc"}>
-          <div class="legend_header">
-            {$_("legend_header")} <br>
-          </div>
-          <span class="legend_dot1"></span> 3 Min<br>
-          <span class="legend_dot2"></span> 10 Min<br>
-          <span class="legend_dot3"></span> 15 Min
-        </div>
-      {/if}
+  <div class="language-switcher" id="element1">
+    <button on:click={() => changeLanguage('en')} class="language-button-en">EN</button>
+    <button on:click={() => changeLanguage('de')} class="language-button-de">DE</button>
+  </div>
 
-      <div class="language-switcher" id="element1">
-        <button on:click={() => changeLanguage('en')} class="language-button-en">EN</button>
-        <button on:click={() => changeLanguage('de')} class="language-button-de">DE</button>
-      </div>
-      
-      <style>
-        .ObenChef{
-          z-index: 9999;
-          position: absolute;
-          right: 600px;
-          top: 400px;
-          display: flexbox;
-        }
+  <style>
+    .ObenChef{
+      z-index: 9999;
+      position: absolute;
+      right: 600px;
+      top: 400px;
+      display: flexbox;
+    }
 
-        .top_right_dot{
-          position: absolute;
-          top: 46px;
-          right: 20px;
-          z-index: 1;
-        }
+    .top_right_dot{
+      position: absolute;
+      top: 46px;
+      right: 20px;
+      z-index: 1;
+    }
 
-        .legend_header {
-          text-align: center;
-          font-weight: bold;
-        }
+    .legend_header {
+      text-align: center;
+      font-weight: bold;
+    }
 
-        .legend_dot1 {
-          display: inline-block;
-          justify-content: center;
-          align-items: center;
-          width: 10px;
-          height: 10px;
-          position: relative;
-          top: 3px;
-          right: 16px;
-          border-radius: 50%;
-          background-color: #ff8400a2;
-          margin-right: 5px;
-        }
+    .legend_dot1 {
+      display: inline-block;
+      justify-content: center;
+      align-items: center;
+      width: 10px;
+      height: 10px;
+      position: relative;
+      top: 3px;
+      right: 16px;
+      border-radius: 50%;
+      background-color: #ff8400a2;
+      margin-right: 5px;
+    }
 
-        .legend_dot2 {
-          display: inline-block;
-          justify-content: center;
-          align-items: center;
-          width: 20px;
-          height: 20px;
-          position: relative;
-          top: 8px;
-          right: 5px;
-          border-radius: 50%;
-          background-color: #ff8400a2;
-          margin-right: 5px;
-        }
+    .legend_dot2 {
+      display: inline-block;
+      justify-content: center;
+      align-items: center;
+      width: 20px;
+      height: 20px;
+      position: relative;
+      top: 8px;
+      right: 5px;
+      border-radius: 50%;
+      background-color: #ff8400a2;
+      margin-right: 5px;
+    }
 
-        .legend_dot3 {
-          display: inline-block;
-          justify-content: center;
-          align-items: center;
-          width: 30px;
-          height: 30px;
-          position: relative;
-          top: 10px;
-          border-radius: 50%;
-          background-color: #ff8400a2;
-          margin-right: 5px;
-        }
+    .legend_dot3 {
+      display: inline-block;
+      justify-content: center;
+      align-items: center;
+      width: 30px;
+      height: 30px;
+      position: relative;
+      top: 10px;
+      border-radius: 50%;
+      background-color: #ff8400a2;
+      margin-right: 5px;
+    }
 
-        .legend_field_div {
-          position: fixed;
-          z-index: 100;
-          top: 110px;
-          right: 10px;
-          background-color: #fff;
-          padding: 10px;
-          border-radius: 10px;
-          text-align: right;
-          box-shadow: 0 0 0 2px rgba(0,0,0,.1);
-        }
+    .legend_field_div {
+      position: fixed;
+      z-index: 100;
+      top: 110px;
+      right: 10px;
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: right;
+      box-shadow: 0 0 0 2px rgba(0,0,0,.1);
+    }
 
-        :global(.tooltip3) {
-          visibility: hidden;
-          background-color: rgba(255, 255, 255, 0.8);
-          color: black;
-          border-radius: 10px;
-          text-align: center;
-          padding: 7px;
-          position: absolute;
-          width: 100px;
-          z-index: 1;
-          top: 50%;
-          left: 260%;
-          transform: translate(-50%, -50%);
-        }
+    :global(.tooltip3) {
+      visibility: hidden;
+      background-color: rgba(255, 255, 255, 0.8);
+      color: black;
+      border-radius: 10px;
+      text-align: center;
+      padding: 7px;
+      position: absolute;
+      width: 100px;
+      z-index: 1;
+      top: 50%;
+      left: 260%;
+      transform: translate(-50%, -50%);
+    }
 
-        :global(.tooltip2) {
-          visibility: hidden;
-          background-color: rgba(255, 255, 255, 0.8);
-          color: black;
-          border-radius: 10px;
-          text-align: center;
-          padding: 7px;
-          position: absolute;
-          width: 100px;
-          z-index: 1;
-          top: 50%;
-          right: 50%;
-          transform: translate(-50%, -50%);
-        }
+    :global(.tooltip2) {
+      visibility: hidden;
+      background-color: rgba(255, 255, 255, 0.8);
+      color: black;
+      border-radius: 10px;
+      text-align: center;
+      padding: 7px;
+      position: absolute;
+      width: 100px;
+      z-index: 1;
+      top: 50%;
+      right: 50%;
+      transform: translate(-50%, -50%);
+    }
 
-        :global(.tooltip) {
-          visibility: hidden;
-          background-color: rgba(255, 255, 255, 0.8);
-          color: black;
-          border-radius: 10px;
-          text-align: center;
-          padding: 7px;
-          position: absolute;
-          width: 100px;
-          z-index: 1;
-          top: 50%;
-          left: 340%;
-          transform: translate(-50%, -50%);
-        }
+    :global(.tooltip) {
+      visibility: hidden;
+      background-color: rgba(255, 255, 255, 0.8);
+      color: black;
+      border-radius: 10px;
+      text-align: center;
+      padding: 7px;
+      position: absolute;
+      width: 100px;
+      z-index: 1;
+      top: 50%;
+      left: 340%;
+      transform: translate(-50%, -50%);
+    }
 
-        .CurrentPosButton {
-          color: transparent;
-          background-color: transparent;
-          background-image: url('../crosshairs-solid.svg');
-          background-position: center;
-          background-repeat: no-repeat;
-          border: none;
-          outline: none;
-          z-index: 120;
-          height: 25px;
-          background-size: 65%;
-        }
+    .CurrentPosButton {
+      color: transparent;
+      background-color: transparent;
+      background-image: url('../crosshairs-solid.svg');
+      background-position: center;
+      background-repeat: no-repeat;
+      border: none;
+      outline: none;
+      z-index: 120;
+      height: 25px;
+      background-size: 65%;
+    }
 
-        .CurrentPosButton:active {
-          background-size: 55%;
-        }
+    .CurrentPosButton:active {
+      background-size: 55%;
+    }
 
-        .CurrentPosButtonDiv {
-          position: fixed;
-          z-index: 120;
-          top: 90px;
-          left: 445px;
-          transition: left 0.35s ease-in-out;
-        }
+    .CurrentPosButtonDiv {
+      position: fixed;
+      z-index: 120;
+      top: 90px;
+      left: 445px;
+      transition: left 0.35s ease-in-out;
+    }
 
-        .CurrentPosButtonDiv.open {
-          left: -65px;
-        }
+    .CurrentPosButtonDiv.open {
+      left: -65px;
+    }
 
-        .GetCoordsButton {
-          color: transparent;
-          background-color: transparent;
-          background-image: url('../map-pin.svg');
-          background-position: center;
-          background-repeat: no-repeat;
-          border: none;
-          outline: none;
-          z-index: 120;
-          height: 25px;
-          background-size: 50%;
-        }
+    .GetCoordsButton {
+      color: transparent;
+      background-color: transparent;
+      background-image: url('../map-pin.svg');
+      background-position: center;
+      background-repeat: no-repeat;
+      border: none;
+      outline: none;
+      z-index: 120;
+      height: 25px;
+      background-size: 50%;
+    }
 
-        .GetCoordsButton:active {
-          background-size: 40%;
-        }
+    .GetCoordsButton:active {
+      background-size: 40%;
+    }
 
-        .GetCoordsButtonDiv {
-          position: fixed;
-          z-index: 120;
-          top: 90px;
-          left: 415px;
-          transition: left 0.35s ease-in-out;
-        }
+    .GetCoordsButtonDiv {
+      position: fixed;
+      z-index: 120;
+      top: 90px;
+      left: 415px;
+      transition: left 0.35s ease-in-out;
+    }
 
-        .GetCoordsButtonDiv.open {
-          left: -65px;
-        }
+    .GetCoordsButtonDiv.open {
+      left: -65px;
+    }
 
-        .language-switcher {
-          position: fixed;
-          bottom: 25px;
-          right: 5px;
-          border-radius: 5px;
-          padding: 5px;
-          z-index: 10010;
-        }
+    .language-switcher {
+      position: fixed;
+      bottom: 25px;
+      right: 5px;
+      border-radius: 5px;
+      padding: 5px;
+      z-index: 10010;
+    }
 
-        .language-button-en {
-          font-size: 14px;
-          font-weight: bold;
-          color: #000000;
-          background-color: transparent;
-          border: none;
-          outline: none;
-          cursor: pointer;
-          padding: 5px;
-          background-image: url('../gb.svg');
+    .language-button-en {
+      font-size: 14px;
+      font-weight: bold;
+      color: #000000;
+      background-color: transparent;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 5px;
+      background-image: url('../gb.svg');
 
-        }
+    }
 
-        .language-button-en:hover {
-          color: #545050;
-        }
+    .language-button-en:hover {
+      color: #545050;
+    }
 
-        .language-button-de {
-          font-size: 14px;
-          font-weight: bold;
-          color: rgb(0, 0, 0);
-          background-color: transparent;
-          border: none;
-          outline: none;
-          cursor: pointer;
-          padding: 5px;
-          background-image: url('../de.svg');
+    .language-button-de {
+      font-size: 14px;
+      font-weight: bold;
+      color: rgb(0, 0, 0);
+      background-color: transparent;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 5px;
+      background-image: url('../de.svg');
 
-        }
+    }
 
-        .language-button-de:hover {
-          color: #545050;
-        }
+    .language-button-de:hover {
+      color: #545050;
+    }
 
-        .map-wrap {
-          position: relative;
-          width: calc(100vw);
-          height: calc(100vh);
-          z-index: 100;
-        }
-      
-        .map {
-          position: fixed;
-          width: 100%;
-          height: 100%;
-          color: rgb(24, 10, 10);
-          background-color: rgb(233, 233, 34);
-          z-index: 90;
-        }
-        
-        .startsearchb {
-          height: 70px;
-          top: 45%;
-          box-shadow: -10px 4px 4px 4px rgba(0,0,0,.1);
-          z-index: 100; 
-          position: fixed;
-          font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-          font-size: 12px;
-          line-height: 18px;
-          left: 0;
-          top: 365px;
-          width: 200px;
-          margin : 10px;
-          margin-left: -30px;
-          padding: 10px;
-          padding-left: 25px;
-          border-radius: 20px;
-          background-color: 
-      rgb(233, 233, 34);
-          color: 
-      rgb(24, 10, 10);
-        }
-      
-        .watermark {
-          position: absolute;
-          left: 10px;
-          bottom: 10px;
-          z-index: 100;
-        }
+    .map-wrap {
+      position: relative;
+      width: calc(100vw);
+      height: calc(100vh);
+      z-index: 100;
+    }
 
-        .spinner {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          z-index: 200;
-          margin: 10px auto;
-          text-align: center;
-          font-size: 15px;
-        }
+    .map {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      color: rgb(24, 10, 10);
+      background-color: rgb(233, 233, 34);
+      z-index: 90;
+    }
+    
+    .startsearchb {
+      height: 70px;
+      top: 45%;
+      box-shadow: -10px 4px 4px 4px rgba(0,0,0,.1);
+      z-index: 100; 
+      position: fixed;
+      font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+      font-size: 12px;
+      line-height: 18px;
+      left: 0;
+      top: 365px;
+      width: 200px;
+      margin : 10px;
+      margin-left: -30px;
+      padding: 10px;
+      padding-left: 25px;
+      border-radius: 20px;
+      background-color: 
+  rgb(233, 233, 34);
+      color: 
+  rgb(24, 10, 10);
+    }
 
-        .spinner > div {
-          width: 25px;
-          height: 25px;
-          background-color: #333;
+    .watermark {
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      z-index: 100;
+    }
 
-          border-radius: 100%;
-          display: inline-block;
-          -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
-          animation: sk-bouncedelay 1.4s infinite ease-in-out both;
-        }
+    .spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 200;
+      margin: 10px auto;
+      text-align: center;
+      font-size: 15px;
+    }
 
-        .spinner .bounce1 {
-          -webkit-animation-delay: -0.32s;
-          animation-delay: -0.32s;
-        }
+    .spinner > div {
+      width: 25px;
+      height: 25px;
+      background-color: #333;
 
-        .spinner .bounce2 {
-          -webkit-animation-delay: -0.16s;
-          animation-delay: -0.16s;
-        }
+      border-radius: 100%;
+      display: inline-block;
+      -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+      animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+    }
 
-        .spinnerB {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          z-index: 200;
-          margin: 10px auto;
-          text-align: center;
-          font-size: 15px;
-        }
+    .spinner .bounce1 {
+      -webkit-animation-delay: -0.32s;
+      animation-delay: -0.32s;
+    }
 
-        .spinnerB > div {
-          width: 25px;
-          height: 25px;
-          background-color: #333;
+    .spinner .bounce2 {
+      -webkit-animation-delay: -0.16s;
+      animation-delay: -0.16s;
+    }
 
-          border-radius: 100%;
-          display: inline-block;
-          -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
-          animation: sk-bouncedelay 1.4s infinite ease-in-out both;
-        }
+    .spinnerB {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 200;
+      margin: 10px auto;
+      text-align: center;
+      font-size: 15px;
+    }
 
-        .spinnerB .bounce1 {
-          -webkit-animation-delay: -0.32s;
-          animation-delay: -0.32s;
-        }
+    .spinnerB > div {
+      width: 25px;
+      height: 25px;
+      background-color: #333;
 
-        .spinnerB .bounce2 {
-          -webkit-animation-delay: -0.16s;
-          animation-delay: -0.16s;
-        }
+      border-radius: 100%;
+      display: inline-block;
+      -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+      animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+    }
 
-        .popup3 {
-          background-color: white;
-          padding: 20px;
-          border-radius: 10px;
-          width: 250px;
-          text-align: center;
-        }
+    .spinnerB .bounce1 {
+      -webkit-animation-delay: -0.32s;
+      animation-delay: -0.32s;
+    }
 
-        .popup3 h2 {
-          margin-top: 0;
-        }
+    .spinnerB .bounce2 {
+      -webkit-animation-delay: -0.16s;
+      animation-delay: -0.16s;
+    }
 
-        .popup3 button {
-          background-color: #4CAF50;
-          color: white;
-          padding: 10px 20px;
-          border: none;
-          border-radius: 5px;
-          font-size: 16px;
-          cursor: pointer;
-          display: block;
-          margin-top: 5px;
-          margin-left: auto;
-          margin-right: auto;
-        }
+    .popup3 {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 250px;
+      text-align: center;
+    }
 
-        .popup3 button:hover {
-          background-color: #3e8e41;
-          color: white;
-        }
+    .popup3 h2 {
+      margin-top: 0;
+    }
 
-        .popup2 {
-          position: fixed;
-          right: 50px;
-          top: 20px;
-          background-color: white;
-          padding: 20px;
-          z-index: 999 !important;
-          border-radius: 10px;
-          width: 200px;
-          text-align: center;
-        }
+    .popup3 button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      display: block;
+      margin-top: 5px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-        .popup2 h2 {
-          margin-top: 0;
-        }
+    .popup3 button:hover {
+      background-color: #3e8e41;
+      color: white;
+    }
 
-        .popup2 button {
-          background-color: #4CAF50;
-          color: white;
-          padding: 10px 20px;
-          border: none;
-          border-radius: 5px;
-          font-size: 16px;
-          cursor: pointer;
-          display: block;
-          margin-top: 5px;
-          margin-left: auto;
-          margin-right: auto;
-        }
+    .popup2 {
+      position: fixed;
+      right: 50px;
+      top: 20px;
+      background-color: white;
+      padding: 20px;
+      z-index: 999 !important;
+      border-radius: 10px;
+      width: 200px;
+      text-align: center;
+    }
 
-        .popup2 button:hover {
-          background-color: #3e8e41;
-          color: white;
-        }
+    .popup2 h2 {
+      margin-top: 0;
+    }
 
-        .close-button {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          padding: 0px 0px !important;
-          width: 15px !important;
-          height: 15px !important;
-          background-color: rgba(245, 5, 5, 0.735) !important;
-          margin-top: 0px !important;
-          border: none !important;
-          border-radius: 50% !important;
-          cursor: pointer;
-        }
+    .popup2 button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      display: block;
+      margin-top: 5px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-        .popup-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 999;
-          background-color: rgba(0, 0, 0, 0.5);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
+    .popup2 button:hover {
+      background-color: #3e8e41;
+      color: white;
+    }
 
-        .popup {
-          background-color: white;
-          padding: 20px;
-          border-radius: 10px;
-          max-width: 500px;
-          text-align: center;
-        }
+    .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 0px 0px !important;
+      width: 15px !important;
+      height: 15px !important;
+      background-color: rgba(245, 5, 5, 0.735) !important;
+      margin-top: 0px !important;
+      border: none !important;
+      border-radius: 50% !important;
+      cursor: pointer;
+    }
 
-        .popup h2 {
-          margin-top: 0;
-        }
+    .popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 999;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        .popup button {
-          background-color: #4CAF50;
-          color: white;
-          padding: 10px 20px;
-          border: none;
-          border-radius: 5px;
-          font-size: 16px;
-          cursor: pointer;
-          display: block;
-          margin-top: 5px;
-          margin-left: auto;
-          margin-right: auto;
-        }
+    .popup {
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 500px;
+      text-align: center;
+    }
 
-        .popup button:hover {
-          background-color: #3e8e41;
-          color: white;
-        }
+    .popup h2 {
+      margin-top: 0;
+    }
 
-        .popup-button.secondary {
-          background-color: rgb(225, 236, 225);
-          color: #4CAF50;
-          opacity: 1;
-        }
+    .popup button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      display: block;
+      margin-top: 5px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-        :global(.maplibregl-popup-close-button),
-        :global(.mapboxgl-popup-close-button) {
-        font-size: 7px;
-        background-color: red;
-        border-color: red;
-        outline: none !important;
-        }
+    .popup button:hover {
+      background-color: #3e8e41;
+      color: white;
+    }
 
-        :global(.maplibregl-popup-close-button:hover),
-        :global(.mapboxgl-popup-close-button:hover) {
-        font-size: 7px;
-        background-color: rgb(198, 16, 16);
-        border-color: red;
-        outline: none !important;
-        }
+    .popup-button.secondary {
+      background-color: rgb(225, 236, 225);
+      color: #4CAF50;
+      opacity: 1;
+    }
 
-        :global(.maplibregl-marker),
-        :global(.mapboxgl-marker) {
-        cursor: pointer;
-        }
+    :global(.maplibregl-popup-close-button),
+    :global(.mapboxgl-popup-close-button) {
+    font-size: 7px;
+    background-color: red;
+    border-color: red;
+    outline: none !important;
+    }
 
-        @-webkit-keyframes sk-bouncedelay {
-          0%, 80%, 100% { -webkit-transform: scale(0) }
-          40% { -webkit-transform: scale(1.0) }
-        }
+    :global(.maplibregl-popup-close-button:hover),
+    :global(.mapboxgl-popup-close-button:hover) {
+    font-size: 7px;
+    background-color: rgb(198, 16, 16);
+    border-color: red;
+    outline: none !important;
+    }
 
-        @keyframes sk-bouncedelay {
-          0%, 80%, 100% { 
-            transform: scale(0);
-            -webkit-transform: scale(0);
-          } 40% { 
-            transform: scale(1.0);
-            -webkit-transform: scale(1.0);
-          }
-        }
-      </style>
+    :global(.maplibregl-marker),
+    :global(.mapboxgl-marker) {
+    cursor: pointer;
+    }
+
+    @-webkit-keyframes sk-bouncedelay {
+      0%, 80%, 100% { -webkit-transform: scale(0) }
+      40% { -webkit-transform: scale(1.0) }
+    }
+
+    @keyframes sk-bouncedelay {
+      0%, 80%, 100% { 
+        transform: scale(0);
+        -webkit-transform: scale(0);
+      } 40% { 
+        transform: scale(1.0);
+        -webkit-transform: scale(1.0);
+      }
+    }
+  </style>

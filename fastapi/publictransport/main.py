@@ -1,7 +1,5 @@
 from fastapi.staticfiles import StaticFiles
-from fastapi import FastAPI, Form, Response
-from pydantic import BaseModel
-from starlette.responses import RedirectResponse
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 
@@ -10,7 +8,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 from geojson import Polygon, Point, Feature, FeatureCollection
 from shapely.geometry import Polygon, Point
-from shapely.ops import cascaded_union, unary_union
+from shapely.ops import unary_union
     
 app = FastAPI()
 
@@ -437,5 +435,9 @@ def reachable_stations(start_station, start_time, travel_time, forced):
 
         #yield next_reachable_stations For every loop 
         yield reachable_stations[amount_changes], end_time
+
+
+
+
 
 app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
