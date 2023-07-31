@@ -12,7 +12,7 @@
     
     let items = options.map(option => ({value: option, label: option}));
 
-    onMount((async) => {
+    onMount(() => {
         // Set the initial value for the select element
         selectedOption.set($_("start_select"))
         selectedOptionB.set($_("start_select"))
@@ -92,7 +92,7 @@
         <input class="public_check" type="checkbox" bind:checked={$showCin}> {$_("cin_plu")} <span class="cindot"><img class="cin_png_icons" src="/cin.png" alt="cinema icon"></span>
         <input class="public_check" type="checkbox" bind:checked={$showKra}> {$_("kra_plu")} <span class="kradot"><img class="kra_png_icons" src="/kra.png" alt="hospital icon"></span>
         <input class="public_check" type="checkbox" bind:checked={$showSch}> {$_("sch_plu")} <span class="schdot"><img class="sch_png_icons" src="/sch.png" alt="school icon"></span>
-        <br id="element6">
+        <br id="element6.2">
         <div class="last_row_pp">
         <input class="public_check" type="checkbox" bind:checked={$showMus}> {$_("mus_plu")} <span class="musdot"><img class="mus_png_icons" src="/mus.png" alt="museum icon"></span>
         <input class="public_check" type="checkbox" bind:checked={$showBib}> {$_("bib_plu")} <span class="bibdot"><img class="bib_png_icons" src="/bib.png" alt="library icon"></span>
