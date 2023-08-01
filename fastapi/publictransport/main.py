@@ -29,19 +29,39 @@ app.add_middleware(
 
 #Load
 stops = pd.read_csv('stops.zip', sep=",")
-stop_times_1 = pd.read_csv('stop_times1.zip', sep=",")
-stop_times_2 = pd.read_csv('stop_times2.zip', sep=",")
+
+chunksize = 10 ** 5  # adjust this value based on your available memory and file size
+
+chunks1 = []
+for chunk1 in pd.read_csv('stop_times1.zip', chunksize=chunksize):
+    
+    # Convert 'arrival_time' and 'departure_time' to timedelta
+    chunk1['arrival_time'] = pd.to_timedelta(chunk1['arrival_time'])
+    chunk1['departure_time'] = pd.to_timedelta(chunk1['departure_time'])
+
+    #Cast them as better dtypes to safe memory
+    chunk1["stop_sequence"] =chunk1["stop_sequence"].astype('int16')
+    
+    chunks1.append(chunk1)
+stop_times_1 = pd.concat(chunks1, axis=0)
+
+chunks2 = []
+for chunk2 in pd.read_csv('stop_times2.zip', chunksize=chunksize):
+    
+    # Convert 'arrival_time' and 'departure_time' to timedelta
+    chunk2['arrival_time'] = pd.to_timedelta(chunk2['arrival_time'])
+    chunk2['departure_time'] = pd.to_timedelta(chunk2['departure_time'])
+
+    #Cast them as better dtypes to safe memory
+    chunk2["stop_sequence"] =chunk2["stop_sequence"].astype('int16')
+    
+    chunks2.append(chunk2)
+stop_times_2 = pd.concat(chunks2, axis=0)
+
 
 #Combine
 stop_times = pd.concat([stop_times_1, stop_times_2], ignore_index=True)
-
-# Convert 'arrival_time' and 'departure_time' to timedelta
-stop_times['arrival_time'] = pd.to_timedelta(stop_times['arrival_time'])
-stop_times['departure_time'] = pd.to_timedelta(stop_times['departure_time'])
-
-#Cast them as better dtypes to safe memory
 stop_times["trip_id"] =stop_times["trip_id"].astype('category')
-stop_times["stop_sequence"] =stop_times["stop_sequence"].astype('int16')
 
 # Convert lat and lon to float 32
 #stops["stop_lat"] = stops["stop_lat"].astype('float32') float32 doens't work - but could be a future improvement
