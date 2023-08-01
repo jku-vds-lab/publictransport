@@ -30,32 +30,30 @@ app.add_middleware(
 _factors_1minute_circle_ = [[0.9999999999999999, 0.9999847965700978], [1.0000075770935701, 0.9999848697787114], [1.0000150813256343, 0.999985088699548], [1.000022440418435, 0.9999854512243794], [1.0000295834891657, 0.9999859538620552], [1.0000364417330232, 0.9999865917721185], [1.000042949086338, 0.9999873588114115], [1.0000490428633828, 0.9999882475932298], [1.0000546643606987, 0.9999892495584478], [1.0000597594230969, 0.9999903550579349], [1.0000642789658598, 0.999991553445468], [1.0000681794480875, 0.9999928331802493], [1.0000714232926053, 0.9999941819380366], [1.0000739792483688, 0.9999955867298204], [1.0000758226918514, 0.9999970340269061], [1.000076935864502, 0.9999985098911937], [1.0000773080439682, 1.0000000001094027], [1.0000769356474302, 1.0000014903299514], [1.0000758222660504, 1.000002966201167], [1.0000739786302038, 1.0000044135095034], [1.0000714225058345, 1.0000058183164282], [1.0000681785229488, 1.0000071670926647], [1.000064277937909, 1.0000084468484949], [1.00005975833184, 1.0000096452588672], [1.0000546632480742, 1.000010750782106], [1.0000490417721495, 1.0000117527710763], [1.0000429480584312, 1.0000126415757338], [1.0000364408079434, 1.0000134086360757], [1.000029582702461, 1.0000140465645881], [1.000022439800334, 1.000014549217405], [1.0000150808998851, 1.0000149117534871], [1.0000075768765284, 1.0000151306812517], [0.9999999999999999, 1.000015203892205], [0.9999924232382877, 1.0000151306812517], [0.9999849195549682, 1.0000149117534871], [0.9999775612067101, 1.000014549217405], [0.9999704190477078, 1.0000140465645881], [0.9999635618477276, 1.0000134086360757], [0.9999570556303232, 1.0000126415757338], [0.9999509630375695, 1.0000117527710763], [0.9999453427274135, 1.000010750782106], [0.9999402488094227, 1.0000096452588672], [0.9999357303243352, 1.0000084468484949], [0.9999318307724052, 1.0000071670926647], [0.9999285876950565, 1.0000058183164282], [0.9999260323138521, 1.0000044135095034], [0.999924189230238, 1.000002966201167], [0.999923076188936, 1.0000014903299514], [0.9999227039072511, 1.0000000001094027], [0.9999230759719308, 0.9999985098911937], [0.9999241888045661, 0.9999970340269061], [0.9999260316958701, 0.9999955867298204], [0.9999285869085107, 0.9999941819380366], [0.9999318298475192, 0.9999928331802493], [0.9999357292966486, 0.999991553445468], [0.9999402477184266, 0.9999903550579349], [0.9999453416150325, 0.9999892495584478], [0.9999509619465501, 0.9999882475932298], [0.999957054602593, 0.9999873588114115], [0.9999635609227827, 0.9999865917721185], [0.9999704182610959, 0.9999859538620552], [0.9999775605886645, 0.9999854512243794], [0.9999849191292446, 0.999985088699548], [0.9999924230212524, 0.9999848697787114], [0.9999999999999999, 0.9999847965700978]]
 
 #Load all gtfs datas 
-#tirol_stops = pd.read_csv('20230721-0401_gtfs_vvt_2023/stops.zip', sep=",")
-#tirol_stop_times = pd.read_csv('20230721-0401_gtfs_vvt_2023/stop_times.zip', sep=",")
-#sbg_stops = pd.read_csv('20230726-0334_gtfs_salzburgverkehr_2023/stops.zip', sep=",")
-#sbg_stop_times = pd.read_csv('20230726-0334_gtfs_salzburgverkehr_2023/stop_times.zip', sep=",")
-#vor_stops = pd.read_csv('20230718-0451_gtfs_vmobil_2023/stops.zip', sep=",")
-#vor_stop_times = pd.read_csv('20230718-0451_gtfs_vmobil_2023/stop_times.zip', sep=",")
-#zug_stops = pd.read_csv('20230726-0252_gtfs_evu_2023/stops.zip', sep=",")
-#zug_stop_times = pd.read_csv('20230726-0252_gtfs_evu_2023/stop_times.zip', sep=",")
-#kar_stops = pd.read_csv('20230726-0230_gtfs_kaerntnerlinien_2023/stops.zip', sep=",")
-#kar_stop_times = pd.read_csv('20230726-0230_gtfs_kaerntnerlinien_2023/stop_times.zip', sep=",")
-#stm_stops = pd.read_csv('20230726-0321_gtfs_verbundlinie_2023/stops.zip', sep=",")
-#stm_stop_times = pd.read_csv('20230726-0321_gtfs_verbundlinie_2023/stop_times.zip', sep=",")
-#oo_stops = pd.read_csv('20230721-0303_gtfs_ooevv_2023/stops.zip', sep=",")
-#oo_stop_times = pd.read_csv('20230721-0303_gtfs_ooevv_2023/stop_times.zip', sep=",")
-#ost_stops = pd.read_csv('20230726-0355_gtfs_vor_2023/stops.zip', sep=",")
-#ost_stop_times = pd.read_csv('20230726-0355_gtfs_vor_2023/stop_times.zip', sep=",")
+tirol_stops = pd.read_csv('20230721-0401_gtfs_vvt_2023/stops.zip', sep=",")
+tirol_stop_times = pd.read_csv('20230721-0401_gtfs_vvt_2023/stop_times.zip', sep=",")
+sbg_stops = pd.read_csv('20230726-0334_gtfs_salzburgverkehr_2023/stops.zip', sep=",")
+sbg_stop_times = pd.read_csv('20230726-0334_gtfs_salzburgverkehr_2023/stop_times.zip', sep=",")
+vor_stops = pd.read_csv('20230718-0451_gtfs_vmobil_2023/stops.zip', sep=",")
+vor_stop_times = pd.read_csv('20230718-0451_gtfs_vmobil_2023/stop_times.zip', sep=",")
+zug_stops = pd.read_csv('20230726-0252_gtfs_evu_2023/stops.zip', sep=",")
+zug_stop_times = pd.read_csv('20230726-0252_gtfs_evu_2023/stop_times.zip', sep=",")
+kar_stops = pd.read_csv('20230726-0230_gtfs_kaerntnerlinien_2023/stops.zip', sep=",")
+kar_stop_times = pd.read_csv('20230726-0230_gtfs_kaerntnerlinien_2023/stop_times.zip', sep=",")
+stm_stops = pd.read_csv('20230726-0321_gtfs_verbundlinie_2023/stops.zip', sep=",")
+stm_stop_times = pd.read_csv('20230726-0321_gtfs_verbundlinie_2023/stop_times.zip', sep=",")
+oo_stops = pd.read_csv('20230721-0303_gtfs_ooevv_2023/stops.zip', sep=",")
+oo_stop_times = pd.read_csv('20230721-0303_gtfs_ooevv_2023/stop_times.zip', sep=",")
+ost_stops = pd.read_csv('20230726-0355_gtfs_vor_2023/stops.zip', sep=",")
+ost_stop_times = pd.read_csv('20230726-0355_gtfs_vor_2023/stop_times.zip', sep=",")
 linz_stops = pd.read_csv('20230719-0451_gtfs_esg_2023/stops.zip', sep=",")
 linz_stop_times = pd.read_csv('20230719-0451_gtfs_esg_2023/stop_times.zip', sep=",")
 #wien_stops = pd.read_csv('unziped/wiener_linien_2023/stops.zip', sep=",") vll in Ost region schon integriert
 #wien_stop_times = pd.read_csv('unziped/wiener_linien_2023/stop_times.zip', sep=",") auch untent zeile 53 ins concatinate aufnehmen (Beide)
 
 # merge them together
-#stops = pd.concat([tirol_stops, sbg_stops, vor_stops, zug_stops, kar_stops, stm_stops, oo_stops, ost_stops, linz_stops], ignore_index=True) # ignore index so the indexes do not start again at 0 for the second one
-#stop_times = pd.concat([tirol_stop_times, sbg_stop_times, vor_stop_times, zug_stop_times, kar_stop_times, stm_stop_times, oo_stop_times, ost_stop_times, linz_stop_times], ignore_index=True)
-stops = linz_stops # ignore index so the indexes do not start again at 0 for the second one
-stop_times =  linz_stop_times
+stops = pd.concat([tirol_stops, sbg_stops, vor_stops, zug_stops, kar_stops, stm_stops, oo_stops, ost_stops, linz_stops], ignore_index=True) # ignore index so the indexes do not start again at 0 for the second one
+stop_times = pd.concat([tirol_stop_times, sbg_stop_times, vor_stop_times, zug_stop_times, kar_stop_times, stm_stop_times, oo_stop_times, ost_stop_times, linz_stop_times], ignore_index=True)
 
 # Add names in (otherwise useles) headsign column, remove last 3 columns, remove zone_id and change datatype to timedelta
 # Create a dictionary mapping stop_id to stop_name
