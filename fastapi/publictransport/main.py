@@ -29,8 +29,27 @@ app.add_middleware(
 
 #Load
 stops = pd.read_csv('stops.zip', sep=",")
+stop_times = pd.read_csv('stop_times.zip', sep=",")
 
-chunksize = 10 ** 5  # adjust this value based on your available memory and file size
+# Remove last three if still complete
+if len(stop_times.columns) == 9:
+    stop_times = stop_times.iloc[:, :-3]
+    
+# Remove last if still complete
+if len(stops.columns) == 5:
+    stops = stops.iloc[:, :-1]
+
+#remove the :1 or :2 at the end of the station to combine both stations for the two directions (or more) to one
+if len(stops[stops['stop_name'] == "Mattighofen Trattmannsberg"]['stop_id'].values[0]) > len("at:44:49675:0"):
+    stop_times['stop_id'] = stop_times['stop_id'].str.rsplit(pat=":", n=1).str[0]
+    stops['stop_id'] = stops['stop_id'].str.rsplit(pat=":", n=1).str[0]
+    
+#remove duplicates from stops (There are now after combining)
+stops = stops.drop_duplicates(subset='stop_id', keep='first')
+stop_times = stop_times.drop(['stop_headsign'], axis=1)
+
+
+"""chunksize = 10 ** 5  # adjust this value based on your available memory and file size
 
 chunks1 = []
 for chunk1 in pd.read_csv('stop_times1.zip', chunksize=chunksize):
@@ -61,6 +80,31 @@ stop_times_2 = pd.concat(chunks2, axis=0)
 
 #Combine
 stop_times = pd.concat([stop_times_1, stop_times_2], ignore_index=True)
+stop_times["trip_id"] =stop_times["trip_id"].astype('category')"""
+
+# Remove last three if still complete
+if len(stop_times.columns) == 9:
+    stop_times = stop_times.iloc[:, :-3]
+    
+# Remove last if still complete
+if len(stops.columns) == 5:
+    stops = stops.iloc[:, :-1]
+
+#remove the :1 or :2 at the end of the station to combine both stations for the two directions (or more) to one
+if len(stops[stops['stop_name'] == "Steyr Kellaugasse"]['stop_id'].values[0]) > len("at:44:43052:0"):
+    stop_times['stop_id'] = stop_times['stop_id'].str.rsplit(pat=":", n=1).str[0]
+    stops['stop_id'] = stops['stop_id'].str.rsplit(pat=":", n=1).str[0]
+    
+#remove duplicates from stops (There are now after combining)
+stops = stops.drop_duplicates(subset='stop_id', keep='first')
+stop_times = stop_times.drop(['stop_headsign'], axis=1)
+
+# Convert 'arrival_time' and 'departure_time' to timedelta
+stop_times['arrival_time'] = pd.to_timedelta(stop_times['arrival_time'])
+stop_times['departure_time'] = pd.to_timedelta(stop_times['departure_time'])
+
+#Cast them as better dtypes to safe memory
+stop_times["stop_sequence"] =stop_times["stop_sequence"].astype('int16')
 stop_times["trip_id"] =stop_times["trip_id"].astype('category')
 
 # Convert lat and lon to float 32
