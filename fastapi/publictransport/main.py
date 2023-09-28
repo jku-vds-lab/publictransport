@@ -27,68 +27,33 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+#NEW
+def timedelta_converter(column_value):
+    return pd.to_timedelta(column_value)
+
+# Temporarily load the CSV to get the column names
+temp_df = pd.read_csv('walkable_stops.csv')
+last_column_name = temp_df.columns[-1]
+
+# Load the CSV with the correct converter for the last column
+walkable_stops_dict = pd.read_csv('walkable_stops.csv', converters={last_column_name: timedelta_converter})
+#END NEW
+
 #Load
 stops = pd.read_csv('stops.zip', sep=",")
-stop_times = pd.read_csv('stop_times.zip', sep=",")
-
-
-"""chunksize = 10 ** 5  # adjust this value based on your available memory and file size
-
-chunks1 = []
-for chunk1 in pd.read_csv('stop_times1.zip', chunksize=chunksize):
-    
-    # Convert 'arrival_time' and 'departure_time' to timedelta
-    chunk1['arrival_time'] = pd.to_timedelta(chunk1['arrival_time'])
-    chunk1['departure_time'] = pd.to_timedelta(chunk1['departure_time'])
-
-    #Cast them as better dtypes to safe memory
-    chunk1["stop_sequence"] =chunk1["stop_sequence"].astype('int16')
-    
-    chunks1.append(chunk1)
-stop_times_1 = pd.concat(chunks1, axis=0)
-
-chunks2 = []
-for chunk2 in pd.read_csv('stop_times2.zip', chunksize=chunksize):
-    
-    # Convert 'arrival_time' and 'departure_time' to timedelta
-    chunk2['arrival_time'] = pd.to_timedelta(chunk2['arrival_time'])
-    chunk2['departure_time'] = pd.to_timedelta(chunk2['departure_time'])
-
-    #Cast them as better dtypes to safe memory
-    chunk2["stop_sequence"] =chunk2["stop_sequence"].astype('int16')
-    
-    chunks2.append(chunk2)
-stop_times_2 = pd.concat(chunks2, axis=0)
-
+stop_times_1 = pd.read_csv('stop_times1.zip', sep=",")
+stop_times_2 = pd.read_csv('stop_times2.zip', sep=",")
 
 #Combine
 stop_times = pd.concat([stop_times_1, stop_times_2], ignore_index=True)
-stop_times["trip_id"] =stop_times["trip_id"].astype('category')"""
-
-# Remove last three if still complete
-if len(stop_times.columns) == 9:
-    stop_times = stop_times.iloc[:, :-3]
-    
-# Remove last if still complete
-if len(stops.columns) == 5:
-    stops = stops.iloc[:, :-1]
-
-#remove the :1 or :2 at the end of the station to combine both stations for the two directions (or more) to one
-if len(stops[stops['stop_name'] == "Steyr Kellaugasse"]['stop_id'].values[0]) > len("at:44:43052:0"):
-    stop_times['stop_id'] = stop_times['stop_id'].str.rsplit(pat=":", n=1).str[0]
-    stops['stop_id'] = stops['stop_id'].str.rsplit(pat=":", n=1).str[0]
-    
-#remove duplicates from stops (There are now after combining)
-stops = stops.drop_duplicates(subset='stop_id', keep='first')
-stop_times = stop_times.drop(['stop_headsign'], axis=1)
 
 # Convert 'arrival_time' and 'departure_time' to timedelta
 stop_times['arrival_time'] = pd.to_timedelta(stop_times['arrival_time'])
 stop_times['departure_time'] = pd.to_timedelta(stop_times['departure_time'])
 
 #Cast them as better dtypes to safe memory
-stop_times["stop_sequence"] =stop_times["stop_sequence"].astype('int16')
 stop_times["trip_id"] =stop_times["trip_id"].astype('category')
+stop_times["stop_sequence"] =stop_times["stop_sequence"].astype('int16')
 
 # Convert lat and lon to float 32
 #stops["stop_lat"] = stops["stop_lat"].astype('float32') float32 doens't work - but could be a future improvement
@@ -140,7 +105,6 @@ async def find_nearest_station(lat: str, lon: str):
     return find_closest_station(lat,lon)
 
 ###### Python Functions #############################################
-
 
 def find_closest_station(lat, lon):
     lat = float(lat)
@@ -244,76 +208,40 @@ def solution_geojson(solution_array, starting_station):
     return FeatureCollection(geo_list)
 
 def find_all_in_walking_distance(valid_stops, end_time):
-
-    # Add coords to valid_stops
-    valid_stops = valid_stops.merge(stops[['stop_id', 'stop_lat', 'stop_lon', 'stop_name']], on='stop_id')
+    # Convert end_time to Timedelta if it's not
+    if not isinstance(end_time, pd.Timedelta):
+        end_time = pd.Timedelta(end_time)
     
-    # Define walking speed and calculate distance that can be walked in 10 minutes
-    walking_speed = 5.0 # km/h
-    walking_distance = (walking_speed / 60) * 5 # distance in km
+    # Ensure "arrival_time" is of type Timedelta / not necessary i think
+    if not pd.api.types.is_timedelta64_dtype(valid_stops["arrival_time"]):
+        valid_stops["arrival_time"] = pd.to_timedelta(valid_stops["arrival_time"])
     
-    # Define a scale to convert degrees to kilometers, approximately
-    lat_scale = 110.574
-    lon_scale = 111.320 * np.cos(np.radians(valid_stops['stop_lat'].mean()))  # Average cosine for simplicity
+    # Filter stops based on end_time
+    valid_stops = valid_stops[end_time - valid_stops["arrival_time"] >= pd.Timedelta('0 days 00:05:00')]
+
+    # List of stop_ids from valid_stops
+    stop_ids_from_valid_stops = valid_stops['stop_id'].unique()
+
+    # Filter walkable_stops_dict based on the stop_ids from valid_stops
+    filtered_walkable_stops_dict = walkable_stops_dict[walkable_stops_dict['origin_stop_id'].isin(stop_ids_from_valid_stops)]
+
+    # Merge the dataframes to get arrival time for each origin stop
+    merged_df = pd.merge(filtered_walkable_stops_dict, valid_stops, left_on='origin_stop_id', right_on='stop_id', how='left')
     
-    # Fetch stop coordinates
-    stop_coords = valid_stops[['stop_lat', 'stop_lon']].values
-
-    # Transform to kilometers
-    stop_coords_km = stop_coords * np.array([lat_scale, lon_scale])
+    # Compute the actual arrival time by adding walking time
+    merged_df['arrival_time'] = merged_df['arrival_time'] + merged_df['walking_time']
     
-    # Create a copy of the stops DataFrame
-    stops_km = stops.copy()
-
-    # Convert stop coordinates to kilometers
-    stops_km[['stop_lat', 'stop_lon']] *= np.array([lat_scale, lon_scale])
-
-    reachable_stops_info = []
-
-    # Iterate over valid stops
-    for index, row in valid_stops.iterrows():
-        coords_km = np.array([row['stop_lat'], row['stop_lon']]) * np.array([lat_scale, lon_scale])
-        arrival_time = row['arrival_time']
-
-        # Calculate euclidean distances to all stops
-        distances = np.sqrt(np.sum((stops_km[['stop_lat', 'stop_lon']].values - coords_km) ** 2, axis=1))
-
-        # Find stops within walking distance
-        reachable = stops_km[distances <= walking_distance]
-
-        # Calculate walking times to reachable stops
-        walking_times = distances[distances <= walking_distance] / walking_speed  # time in hours
-
-        # Convert walking times to timedelta
-        walking_times_td = pd.to_timedelta(walking_times, unit='h')
-
-        # Compute arrival times at reachable stops
-        arrival_times_reachable = (arrival_time + walking_times_td).floor('T') #rounding to nearest Minute
-
-        # Create DataFrame with information about reachable stops
-        reachable_stops = pd.DataFrame({
-            'stop_id': reachable['stop_id'].values,
-            'arrival_time': arrival_times_reachable
-        })
-
-        # Append to the list
-        reachable_stops_info.append(reachable_stops)
-    
-    # Concatenate all dataframes
+    reachable_stops_info = merged_df[['reachable_stop_id', 'arrival_time']]
     if len(reachable_stops_info) != 0:
-        reachable_stops_info = pd.concat(reachable_stops_info)
-
-        # Remove lines from reachable_stops_info that contain a stop id that is already in valid stops 
-        reachable_stops_info = reachable_stops_info[~reachable_stops_info['stop_id'].isin(valid_stops['stop_id'])]
-
-        # Remove duplicates from reachable_stops_info according to the stop_id and keep the one that has the earlier arrival time
-        reachable_stops_info = reachable_stops_info.sort_values('arrival_time').drop_duplicates('stop_id', keep='first')
-        
+        reachable_stops_info = reachable_stops_info[~reachable_stops_info['reachable_stop_id'].isin(valid_stops['stop_id'])]
+        reachable_stops_info = reachable_stops_info.sort_values('arrival_time').drop_duplicates('reachable_stop_id', keep='first')
+        reachable_stops_info = reachable_stops_info.rename(columns={'reachable_stop_id': 'stop_id'})
         return reachable_stops_info
-    else: 
+    else:
         return "nothing found"
     
 def reachable_stations(start_station, start_time, travel_time, forced):
+    #measure_time_start = time.time()
 
     start_time = pd.to_timedelta(start_time)
     travel_time = pd.to_timedelta(str(travel_time) + ' minutes')
@@ -382,6 +310,9 @@ def reachable_stations(start_station, start_time, travel_time, forced):
             reachable_stations[amount_changes].append(row.tolist())
     
     #yield reachable_stations First time
+    #measure_time_end = time.time() 
+    #print(f"The find station function took {measure_time_end - measure_time_start} seconds to execute")
+    #measure_time_start = time.time() 
     yield reachable_stations[amount_changes], end_time
     
     used_trips = set(trip_start_sequence.keys())
@@ -443,10 +374,8 @@ def reachable_stations(start_station, start_time, travel_time, forced):
         reachable_stations.append(next_reachable_stations.values.tolist())
 
         #yield next_reachable_stations For every loop 
+        #measure_time_end = time.time() 
+        #print(f"The find station function took {measure_time_end - measure_time_start} seconds to execute")
         yield reachable_stations[amount_changes], end_time
-
-
-
-
 
 app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")

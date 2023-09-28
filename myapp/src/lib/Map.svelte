@@ -1,6 +1,6 @@
 <script>
     import { onMount, onDestroy } from 'svelte'
-    import { Map, NavigationControl, Marker, LngLat, Popup  } from 'maplibre-gl'
+    import { Map, NavigationControl, Marker, LngLat, Popup} from 'maplibre-gl'
     import 'maplibre-gl/dist/maplibre-gl.css'
     import Navbar from './Navbar.svelte';
     import {isOpen, url_stored, marker, currentMinutes, currentTime, selectedOption, selectedOptionB, showAltenPflegeHeim, showKindergarten, showBib, showMus, showUnis, showKra, showCin, showSch, showTutorial} from '../stores.js';
@@ -31,8 +31,8 @@
     let request_url_start3 = BASE_URL + "nearest_station?"
     let noConfirm = false
 
-    let isGettingCoords = false
-    let customeCoords
+    let isGettingCoords = false;
+    let customeCoords;
     let CurrentPosStation;
     let markerCurPos;
 
@@ -151,7 +151,6 @@
     let yourCoords_ = null;
     let hoverMarker = null;
 
-
     const check_first_popup = {};
     check_first_popup["bib"] = true; 
     check_first_popup["mus"] = true;
@@ -162,6 +161,7 @@
     check_first_popup["kra"] = true; 
     check_first_popup["sch"] = true; 
   
+
     onMount(async() => {
       popupVisible = true; 
 
@@ -736,7 +736,6 @@
         }
       });
 
-
       map.addLayer({
         id: id + '-point_background',
         type: 'circle',
@@ -774,7 +773,7 @@
       });
     }
 
-    //tooltip select Position function (GetCoordsButton)
+    //tooltip select Positiopn function (GetCoordsButton)
     function tooltip(node, ctx) {
       const tip = document.createElement('span');
       if (ctx == "legend_desc") {
@@ -818,6 +817,7 @@
       };
     }
 
+    //toggle navbar
     function toggleNavbar() {
       isOpen.update(value => !value);
     }

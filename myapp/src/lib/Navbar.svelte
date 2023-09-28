@@ -29,13 +29,14 @@
     locale.subscribe(value => {
       currentLocale = value;
     });
+
     //let start = true
     //let url = null
     //let url2 = null
 
     //let apicall = "waiting for response..."
-    let request_url_start = BASE_URL + "feed?"
-    let request_url_start2 = BASE_URL + "marker?"
+    //let request_url_start = BASE_URL + "feed?"
+    //let request_url_start2 = BASE_URL + "marker?"
 
     const funktionbeiInputMinutes = (e) => {
       let value = e.target.value;
@@ -69,6 +70,7 @@
 <div class="navbar-container" class:open="{$isOpen}">
   <nav class="navbar">
     <div class="heading">
+
         <h2>{$_("navbar_title")}</h2>
         <h4>{$_("navbar_describtion")}</h4>
 
@@ -97,6 +99,7 @@
         <input class="public_check" type="checkbox" bind:checked={$showMus}> {$_("mus_plu")} <span class="musdot"><img class="mus_png_icons" src="/mus.png" alt="museum icon"></span>
         <input class="public_check" type="checkbox" bind:checked={$showBib}> {$_("bib_plu")} <span class="bibdot"><img class="bib_png_icons" src="/bib.png" alt="library icon"></span>
         </div>
+
     </div>
   </nav>
 </div>
